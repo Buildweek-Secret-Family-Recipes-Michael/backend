@@ -1,5 +1,7 @@
-require("dotenv").config();
+require("dotenv").config({path:"./src/.env"});
+require("ts-node/register");
 
+console.log(process.env.DB_USER);
 module.exports = {
     development: {
         client: "pg",
@@ -16,15 +18,10 @@ module.exports = {
         },
         useNullAsDefault: true,
         migrations: {
-            directory: "./migrations"
+            directory: "./src/data/migrations"
         },
         seeds: {
-            directory: "./seeds",
-        },
-        pool: {
-            afterCreate: (conn: any, done: any) => {
-                conn.run("PRAGMA foreign_keys = ON", done);
-            },
-        },
+            directory: "./src/data/seeds",
+        }
     }
 };
