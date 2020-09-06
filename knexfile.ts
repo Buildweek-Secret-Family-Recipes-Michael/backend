@@ -1,5 +1,4 @@
 require("dotenv").config({path:"./src/.env"});
-require("ts-node/register");
 
 module.exports = {
     development: {
