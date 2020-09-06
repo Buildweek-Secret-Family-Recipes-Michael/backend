@@ -18,7 +18,7 @@ export async function createUser(user: IUser) {
         ...user,
         id: uuid.v4()
     };
-    const [id] = await dbConfig("users").insert(newUser);
+    const [id] = await dbConfig("users").insert(newUser).returning("id");
     return findById(id);
 }
 

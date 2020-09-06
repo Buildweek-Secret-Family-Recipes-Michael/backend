@@ -8,7 +8,7 @@ export async function up(knex: Knex): Promise<void> {
         tableBuilder.uuid("id").unique().notNullable().primary();
         tableBuilder.text("username").unique().notNullable();
         tableBuilder.text("password").notNullable();
-        tableBuilder.timestamp("registered-at", {precision:6}).notNullable();
+        tableBuilder.timestamp("createdAt").notNullable().defaultTo(knex.fn.now());
     });
 
     await knex.schema.createTable("recipes", tableBuilder => {
