@@ -1,7 +1,6 @@
 require("dotenv").config({path:"./src/.env"});
 require("ts-node/register");
 
-console.log(process.env.DB_USER);
 module.exports = {
     development: {
         client: "pg",

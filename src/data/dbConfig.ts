@@ -1,4 +1,4 @@
-const knex = require("knex")({client: "pg"});
+const knex = require("knex");
 const knexfile = require("../../knexfile");
 
 export const dbConfig = knex(knexfile.development);
