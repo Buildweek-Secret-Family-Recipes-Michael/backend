@@ -1,5 +1,6 @@
 import * as usersModel from "../models/users-model";
 import jwt from "jsonwebtoken";
+import * as recipesModel from "../models/recipes-model";
 
 export async function validateUserInfo(req: any, res: any, next: any) {
     try {
@@ -13,6 +14,21 @@ export async function validateUserInfo(req: any, res: any, next: any) {
         console.log(e.stack);
         next();
     }
+}
+
+export async function validateUserId(req: any, res: any, next: any) {
+    try {
+        // this matcher checks if the provided id is a valid uuid or not
+        const matcher = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+        if (!req.params.id.match(matcher)) return res.status(400).json({error: "Id provided is not a valid uuid"});
+        const user = await usersModel.findById(req.params.id);
+        if(!user) return res.status(400).json({error: "Id provided does not match any user"});
+        req.body.user = user;
+        next();
+    } catch (e) {
+        console.log(e.stack);
+    }
+
 }
 
 export async function validateUserUpdate(req: any, res: any, next: any) {
@@ -56,7 +72,7 @@ export async function restrict(req: any, res: any, next: any) {// todo: note to 
         // @ts-ignore
         jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {// todo: possible undefined string|und for env var
             if (err) return res.status(401).json(authError);
-            req.token = decoded;
+            req.body.token = decoded;
             next();
         });
     } catch (e) {

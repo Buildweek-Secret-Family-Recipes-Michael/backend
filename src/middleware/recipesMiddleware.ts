@@ -21,7 +21,6 @@ export async function validateRecipeId(req: any, res: any, next: any) {
         if(!recipe) return res.status(400).json({error: "Id provided does not match any recipe"});
         req.body.recipe = recipe;
         next();
-
     } catch (e) {
         console.log(e.stack);
         next();
