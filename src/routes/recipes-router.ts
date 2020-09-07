@@ -1,6 +1,6 @@
 import express from "express";
 import * as recipesModel from "../models/recipes-model";
-import {validateRecipeInfo} from "../middleware/recipesMiddleware";
+import {validateRecipeId, validateRecipeInfo} from "../middleware/recipesMiddleware";
 import {restrict} from "../middleware/usersMiddleware";
 
 export const recipesRouter = express.Router();
@@ -28,6 +28,17 @@ recipesRouter.get("/", restrict, async (req, res) => {
     } catch (e) {
         console.log(e.stack);
         res.status(500).json({error: "Error getting recipes"});
+    }
+});
+
+//todo: get by id, get by userid
+recipesRouter.get("/:id", restrict, validateRecipeId, async (req, res) => {
+    try {
+        //recipe retreived by validateRecipeId middleware
+        res.status(200).json(req.body.recipe);
+    } catch (e) {
+        console.log(e.stack);
+        res.status(500).json({error: "Error getting recipe by id"});
     }
 });
 

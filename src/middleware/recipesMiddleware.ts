@@ -11,3 +11,19 @@ export async function validateRecipeInfo(req: any, res: any, next: any) {
         next();
     }
 }
+
+export async function validateRecipeId(req: any, res: any, next: any) {
+    try {
+        // this matcher checks if the provided id is a valid uuid or not
+        const matcher = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+        if (!req.params.id.match(matcher)) return res.status(400).json({error: "Id provided is not a valid uuid"});
+        const recipe = await recipesModel.findById(req.params.id);
+        if(!recipe) return res.status(400).json({error: "Id provided does not match any recipe"});
+        req.body.recipe = recipe;
+        next();
+
+    } catch (e) {
+        console.log(e.stack);
+        next();
+    }
+}
