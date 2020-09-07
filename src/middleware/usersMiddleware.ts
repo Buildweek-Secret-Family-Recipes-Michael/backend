@@ -5,7 +5,7 @@ export async function validateUserInfo(req: any, res: any, next: any) {
     try {
         const {username, password} = req.body;
         if (!username || !password) return res.status(400).json({error: "Missing username or password"});
-        const user = await usersModel.findBy({username}).first();
+        const user = await usersModel.findBy(username).first();
         if (user) return res.status(409).json({message: "Username is already taken"});
         req.body.user = user;
         next();
@@ -35,7 +35,7 @@ export async function validateUserUpdate(req: any, res: any, next: any) {
         if (req.body.username === userExists.username) {
             return next();
         } else if (req.body.username !== userExists.username) {
-            const usernameExists = await usersModel.findBy({username}).first();
+            const usernameExists = await usersModel.findBy(username).first();
             if (usernameExists) return res.status(400).json({error: "Username already taken"});
         }
         next();

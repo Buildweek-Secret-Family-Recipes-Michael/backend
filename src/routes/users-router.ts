@@ -25,7 +25,7 @@ usersRouter.post("/register", validateUserInfo, async (req, res) => {
 usersRouter.post("/login", async (req, res) => {
     try {
         const {username, password} = req.body;
-        const user = await usersModel.findBy({username}).first();
+        const user = await usersModel.findBy(username).first();
 
         if (!user) return res.status(401).json({error: "Username or password invalid"});
 

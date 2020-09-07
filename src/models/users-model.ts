@@ -36,5 +36,5 @@ export function getUsers() {
 export function findBy(filter:any) {
     return dbConfig("users")
         .select("id", "username", "password")// selecting password because I need it to compare hashes in my middleware
-        .where(filter);
+        .where({filter});
 }
