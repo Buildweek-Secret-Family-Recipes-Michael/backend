@@ -1,4 +1,4 @@
-import {dbConfig} from "../../data/dbConfig";
+import {dbConfig} from "../data/dbConfig";
 import uuid from "uuid-1345";
 
 export interface IUser {
