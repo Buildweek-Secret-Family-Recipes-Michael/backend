@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "scripts": {
     "lint": "tslint --project \"tsconfig.json\"",
-    "start": "node -r module-alias/register ./dist --env=production",
+    "start": "nodemon --require dotenv/config --exec ts-node ./src/index.ts",
     "start:dev": "nodemon",
-    "test": "nodemon --config ./spec/nodemon.json"
+    "test": "cross-env DB_ENV=testing jest --watch --coverage"
   },
   "nodemonConfig": {
     "watch": [
@@ -18,16 +18,30 @@
     "exec": "ts-node -r tsconfig-paths/register ./src"
   },
   "dependencies": {
+    "@types/bcryptjs": "^2.4.2",
+    "@types/jsonwebtoken": "^8.5.0",
     "@types/knex": "^0.16.1",
+    "@types/uuid-1345": "^0.99.21",
+    "bcryptjs": "^2.4.3",
+    "cross-env": "^7.0.2",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "knex": "^0.21.5"
+    "jsonwebtoken": "^8.5.1",
+    "knex": "^0.21.5",
+    "pg": "^8.3.3",
+    "sqlite3": "^5.0.0",
+    "uuid-1345": "^1.0.2"
   },
   "devDependencies": {
     "@types/express": "^4.17.8",
+    "@types/jest": "^26.0.13",
     "@types/node": "^14.6.4",
+    "@types/supertest": "^2.0.10",
     "cz-conventional-changelog": "^3.3.0",
+    "jest": "^26.4.2",
     "nodemon": "^2.0.4",
+    "supertest": "^4.0.2",
+    "ts-jest": "^26.3.0",
     "ts-node": "^9.0.0",
     "tsconfig-paths": "^3.9.0",
     "tslint": "^6.1.3",

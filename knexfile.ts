@@ -1,4 +1,4 @@
-require("dotenv").config();
+require("dotenv").config({path: "./src/.env"});//had to provide the path because my env isn't at root, todo: fix this
 
 module.exports = {
     development: {
@@ -16,15 +16,27 @@ module.exports = {
         },
         useNullAsDefault: true,
         migrations: {
-            directory: "./migrations"
+            directory: "./src/data/migrations"
         },
         seeds: {
-            directory: "./seeds",
+            directory: "./src/data/seeds",
+        }
+    },
+    testing: {
+        client: "pg",
+        connection: {
+            host: process.env.TESTING_DB_HOST,
+            user: process.env.TESTING_DB_USER,
+            password: process.env.TESTING_DB_PASSWORD,
+            database: process.env.TESTING_DB_DATABASE,
+            port: process.env.DB_PORT,
         },
-        pool: {
-            afterCreate: (conn: any, done: any) => {
-                conn.run("PRAGMA foreign_keys = ON", done);
-            },
+        useNullAsDefault: true,
+        migrations: {
+            directory: "./src/data/migrations"
         },
+        seeds: {
+            directory: "./src/data/seeds",
+        }
     }
 };

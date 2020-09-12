@@ -1,6 +1,8 @@
 import * as Knex from "knex";
 
 
+//command to run migrations: cross-env DB_ENV=testing npx knex migrate:latest --env=testing
+//the cross-env is needed to create a proper sqlite table since it can't use UUID's
 export async function up(knex: Knex): Promise<void> {
     await knex.schema.createTable("users", tableBuilder => {
         // I decided to use uuids for this instead of an incremented single digit for practice and unpredictability to make my db more secure
@@ -8,6 +10,7 @@ export async function up(knex: Knex): Promise<void> {
         tableBuilder.uuid("id").unique().notNullable().primary();
         tableBuilder.text("username").unique().notNullable();
         tableBuilder.text("password").notNullable();
+        tableBuilder.timestamp("createdAt").notNullable().defaultTo(knex.fn.now());
     });
 
     await knex.schema.createTable("recipes", tableBuilder => {
@@ -20,7 +23,7 @@ export async function up(knex: Knex): Promise<void> {
         tableBuilder.uuid("id").unique().notNullable().primary();
         tableBuilder.text("amount").notNullable();
         tableBuilder.text("name").notNullable();
-        tableBuilder.uuid("recipeId").notNullable().references("id").inTable("recipes").onDelete("CASCADE").onUpdate("CASCADE");
+        //Not referencing recipe id here because it will be in the join table to allow multiple recipes access to the same ingredient
     });
 
     await knex.schema.createTable("instructions", tableBuilder => {
@@ -53,6 +56,7 @@ export async function up(knex: Knex): Promise<void> {
 
 
 export async function down(knex: Knex): Promise<void> {
+    console.log("Dropping tables");
     await knex.schema.dropTableIfExists("recipes_ingredients");
     await knex.schema.dropTableIfExists("recipes_instructions");
     await knex.schema.dropTableIfExists("users_recipes");
