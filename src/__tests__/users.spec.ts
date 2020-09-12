@@ -13,10 +13,20 @@ afterAll(async () => {
 });
 
 
-describe("Creates a new user",  () => {
-    describe("When valid new user info is provided", () =>{
-        it("Receives the created user info from the server", async () =>{
-            const newUser = {username: "eevee", password:"$2a$13$h/OXxNKcj4E4ZF1KO5Uzhuh/b38Q57Bh5crgmMA4IgqaSz8rG9mG2"};
+describe("Creates a new user", () => {
+    describe("When valid new user info is provided", () => {
+        it("Receives the created user info from the server", async () => {
+            const newUser = {
+                username: "eevee",
+                password: "newPassword"
+            };
+            const res = await supertest(server)
+                .post("/api/users/register")
+                .set("content-type", "application/json")
+                .send(JSON.stringify(newUser));
+
+            expect(res.status).toBe(201);
+            expect(res.body.username).toBe(newUser.username);
         });
     });
 });

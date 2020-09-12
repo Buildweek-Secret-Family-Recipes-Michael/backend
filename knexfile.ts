@@ -1,4 +1,4 @@
-require("dotenv").config({path:"./src/.env"});//had to provide the path because my env isn't at root, todo: fix this
+require("dotenv").config({path: "./src/.env"});//had to provide the path because my env isn't at root, todo: fix this
 
 module.exports = {
     development: {
@@ -23,9 +23,13 @@ module.exports = {
         }
     },
     testing: {
-        client: "sqlite3",
+        client: "pg",
         connection: {
-            filename: "./src/data/testing/test.db3"
+            host: process.env.TESTING_DB_HOST,
+            user: process.env.TESTING_DB_USER,
+            password: process.env.TESTING_DB_PASSWORD,
+            database: process.env.TESTING_DB_DATABASE,
+            port: process.env.DB_PORT,
         },
         useNullAsDefault: true,
         migrations: {

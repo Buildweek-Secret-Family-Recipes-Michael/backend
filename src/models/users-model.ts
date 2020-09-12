@@ -20,7 +20,11 @@ export async function createUser(user: IUser) {
         id: uuid.v4()
     };
     const [id] = await dbConfig("users").insert(newUser).returning("id");
-    return findById(id);
+    console.log(id);
+    const newCreatedUser = await findById(id);
+    console.log("New created user", newCreatedUser);
+    return newCreatedUser;//todo: this is coming back as undefined. But it is being added to the testing db, so my environment is set up properly, but there is a problem somewhere
+    //todo: The reason for this is because sqlite cannot store UUID's, so I will need to set up a postgres testing db, use pgadmin for this
 }
 
 export async function updateUser(user: IUser) {
@@ -33,8 +37,8 @@ export function getUsers() {
     return dbConfig("users").select("id", "username");
 }
 
-export function findBy(filter:any) {
+export function findBy(filter:Partial<IUser>) {
+    console.log("Find by called", filter);
     return dbConfig("users")
-        .select("id", "username", "password")// selecting password because I need it to compare hashes in my middleware
-        .where({filter});
+        .where(filter);
 }

@@ -1,6 +1,8 @@
 import * as Knex from "knex";
 
 
+//command to run migrations: cross-env DB_ENV=testing npx knex migrate:latest --env=testing
+//the cross-env is needed to create a proper sqlite table since it can't use UUID's
 export async function up(knex: Knex): Promise<void> {
     await knex.schema.createTable("users", tableBuilder => {
         // I decided to use uuids for this instead of an incremented single digit for practice and unpredictability to make my db more secure
@@ -54,6 +56,7 @@ export async function up(knex: Knex): Promise<void> {
 
 
 export async function down(knex: Knex): Promise<void> {
+    console.log("Dropping tables");
     await knex.schema.dropTableIfExists("recipes_ingredients");
     await knex.schema.dropTableIfExists("recipes_instructions");
     await knex.schema.dropTableIfExists("users_recipes");

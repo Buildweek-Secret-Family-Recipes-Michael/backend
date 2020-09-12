@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "lint": "tslint --project \"tsconfig.json\"",
-    "start": "node -r module-alias/register ./dist --env=production",
+    "start": "nodemon --require dotenv/config --exec ts-node ./src/index.ts",
     "start:dev": "nodemon",
     "test": "cross-env DB_ENV=testing jest --watch --coverage"
   },
@@ -29,6 +29,7 @@
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.21.5",
     "pg": "^8.3.3",
+    "sqlite3": "^5.0.0",
     "uuid-1345": "^1.0.2"
   },
   "devDependencies": {

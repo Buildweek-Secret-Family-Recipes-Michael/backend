@@ -8,6 +8,7 @@ export const usersRouter = express.Router();
 
 // create
 usersRouter.post("/register", validateUserInfo, async (req, res) => {
+    console.log("Post called");
     try {
         const {username, password} = req.body;
 
@@ -15,6 +16,7 @@ usersRouter.post("/register", validateUserInfo, async (req, res) => {
             username,
             password: await bcrypt.hash(password, 13)
         });
+        console.log("newUser ", newUser, "Username", username);
         res.status(201).json(newUser);
     } catch (e) {
         console.log(e.stack);
