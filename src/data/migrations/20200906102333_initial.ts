@@ -21,7 +21,7 @@ export async function up(knex: Knex): Promise<void> {
         tableBuilder.uuid("id").unique().notNullable().primary();
         tableBuilder.text("amount").notNullable();
         tableBuilder.text("name").notNullable();
-        tableBuilder.uuid("recipeId").notNullable().references("id").inTable("recipes").onDelete("CASCADE").onUpdate("CASCADE");
+        //Not referencing recipe id here because it will be in the join table to allow multiple recipes access to the same ingredient
     });
 
     await knex.schema.createTable("instructions", tableBuilder => {

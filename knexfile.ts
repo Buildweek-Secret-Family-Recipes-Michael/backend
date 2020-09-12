@@ -1,4 +1,4 @@
-require("dotenv").config({path:"./src/.env"});
+require("dotenv").config({path:"./src/.env"});//had to provide the path because my env isn't at root, todo: fix this
 
 module.exports = {
     development: {
@@ -13,6 +13,19 @@ module.exports = {
                 sslmode: "require",
                 rejectUnauthorized: false,
             }
+        },
+        useNullAsDefault: true,
+        migrations: {
+            directory: "./src/data/migrations"
+        },
+        seeds: {
+            directory: "./src/data/seeds",
+        }
+    },
+    testing: {
+        client: "sqlite3",
+        connection: {
+            filename: "./src/data/testing/test.db3"
         },
         useNullAsDefault: true,
         migrations: {

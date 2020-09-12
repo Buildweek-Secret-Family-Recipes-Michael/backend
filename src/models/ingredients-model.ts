@@ -1,12 +1,31 @@
 import {dbConfig} from "../data/dbConfig";
 import uuid from "uuid-1345";
 
-export interface IRecipe {
+export interface IIngredient {
+    amount: string;
     name: string;
+    recipeId: string;
     id?: string;
-    userId: string;
 }
 
+
+export function findById(id:string) {
+    return dbConfig("ingredients")
+        .where({id})
+        .select("amount", "name", "recipeId")
+        .first();
+}
+
+export async function createIngredient(ingredient: IIngredient) {
+    const newIngredient = {
+        ...ingredient,
+        id: uuid.v4(),
+    };
+    const [id] = await dbConfig("ingredients").insert(newIngredient).returning("id");
+    return findById(id);
+}
+
+/*
 export function findById(id: string) {
     return dbConfig("recipes")
         .where({id})
@@ -41,14 +60,10 @@ export async function updateRecipe(recipe: IRecipe) {
     return findById(id);
 }
 
-export function getRecipes() {
-    // todo: this function should only be called from a route protected by and admin account
-    return dbConfig("recipes");
-}
-
 export function findBy(filter: any) {
     return dbConfig("recipes")
         .select("id", "name", "userId")
         .where({filter})
         .first();
 }
+ */
