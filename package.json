@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "lint": "tslint --project \"tsconfig.json\"",
-    "start": "nodemon --require dotenv/config --exec ts-node ./src/index.ts",
+    "start": "nodemon --exec ts-node ./src/index.ts",
     "start:dev": "nodemon",
     "test": "cross-env DB_ENV=testing jest --watch --coverage"
   },
