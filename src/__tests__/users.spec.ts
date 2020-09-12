@@ -60,3 +60,70 @@ describe("Creates a new user", () => {
         });
     });
 });
+
+describe("Updates a user", () => {
+    describe("When information provided is valid", () => {
+        it("Sends valid user update information", async () => {
+            const newUserInfo = {username: "newPokemon0", password: "newPokemon0Password"};
+            const res = await supertest(server)
+                .put("/api/users/user/868f632e-dffc-41b0-872b-c612525e5651")
+                .set("content-type", "application/json")
+                .set("authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI4NjhmNjMyZS1kZmZjLTQxYjAtODcyYi1jNjEyNTI1ZTU2NTEiLCJpYXQiOjE1OTk5NDg4NjIsImV4cCI6MTU5OTk1NjA2Mn0.PRFLdfzJjySmks0Jt0FpZra2W1edY75ffmehJOu3Juc")
+                .send(JSON.stringify(newUserInfo));
+
+            expect(res.status).toBe(200);
+            expect(res.body.username).toBe(newUserInfo.username);
+        });
+    });
+    describe("When invalid user information is provided", () => {
+        //If these tests stop passing it is because the jwt expired. Create one that does not expire!
+        it("Provides a username that already exists", async () => {
+            const newUserInfo = ({username: "pokemon2", password: "newPass"});
+            const res = await supertest(server)
+                .put("/api/users/user/868f632e-dffc-41b0-872b-c612525e5651")
+                .set("content-type", "application/json")
+                .set("authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI4NjhmNjMyZS1kZmZjLTQxYjAtODcyYi1jNjEyNTI1ZTU2NTEiLCJpYXQiOjE1OTk5NDg4NjIsImV4cCI6MTU5OTk1NjA2Mn0.PRFLdfzJjySmks0Jt0FpZra2W1edY75ffmehJOu3Juc")
+                .send(JSON.stringify(newUserInfo));
+
+            expect(res.status).toBe(400);
+            expect(res.body.username).toBe(undefined);
+            expect(res.body.error).toBe("Username already taken");
+        });
+        it("Provides an invalid jwt", async () => {
+            const newUserInfo = ({username: "Shawn Spencer", password: "Bruton Gaster"});
+            const res = await supertest(server)
+                .put("/api/users/user/868f632e-dffc-41b0-872b-c612525e5651")
+                .set("content-type", "application/json")
+                .set("authorization", "eyJhbGciOiJIUzI1NiISInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI4NjhmNjMyZS1kZmZjLTQxYjAtODcyYi1jNjEyNTI1ZTU2NTEiLCJpYXQiOjE1OTk5NDg4NjIsImV4cCI6MTU5OTk1NjA2Mn0.PRFLdfzJjySmks0Jt0FpZra2W1edY75ffmehJOu3Juc")
+                .send(JSON.stringify(newUserInfo));
+
+            expect(res.status).toBe(401);
+            expect(res.body.username).toBe(undefined);
+            expect(res.body.error).toBe("Invalid credentials");
+        });
+        it("Provides a user with no username", async () => {
+            const newUserInfo = ({password: "Bruton Gaster"});
+            const res = await supertest(server)
+                .put("/api/users/user/868f632e-dffc-41b0-872b-c612525e5651")
+                .set("content-type", "application/json")
+                .set("authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI4NjhmNjMyZS1kZmZjLTQxYjAtODcyYi1jNjEyNTI1ZTU2NTEiLCJpYXQiOjE1OTk5NDg4NjIsImV4cCI6MTU5OTk1NjA2Mn0.PRFLdfzJjySmks0Jt0FpZra2W1edY75ffmehJOu3Juc")
+                .send(JSON.stringify(newUserInfo));
+
+            expect(res.status).toBe(400);
+            expect(res.body.username).toBe(undefined);
+            expect(res.body.error).toBe("Missing username or password");
+        });
+        it("Provides an id that is not a valid uuid", async () => {
+            const newUserInfo = ({username: "Henry spencer", password: "Bruton Gaster"});
+            const res = await supertest(server)
+                .put("/api/users/user/8")
+                .set("content-type", "application/json")
+                .set("authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI4NjhmNjMyZS1kZmZjLTQxYjAtODcyYi1jNjEyNTI1ZTU2NTEiLCJpYXQiOjE1OTk5NDg4NjIsImV4cCI6MTU5OTk1NjA2Mn0.PRFLdfzJjySmks0Jt0FpZra2W1edY75ffmehJOu3Juc")
+                .send(JSON.stringify(newUserInfo));
+
+            expect(res.status).toBe(400);
+            expect(res.body.username).toBe(undefined);
+            expect(res.body.error).toBe("Provided ID is not a valid uuid");
+        });
+    });
+});

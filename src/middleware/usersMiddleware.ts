@@ -51,7 +51,7 @@ export async function validateUserUpdate(req: any, res: any, next: any) {
         if (req.body.username === userExists.username) {
             return next();
         } else if (req.body.username !== userExists.username) {
-            const usernameExists = await usersModel.findBy(username).first();
+            const usernameExists = await usersModel.findBy({username}).first();
             if (usernameExists) return res.status(400).json({error: "Username already taken"});
         }
         next();
@@ -63,7 +63,7 @@ export async function validateUserUpdate(req: any, res: any, next: any) {
 
 export async function restrict(req: any, res: any, next: any) {// todo: note to self: This middleware is not meant to be used on the login route
     try {
-        const authError = {message: "Invalid credentials"};
+        const authError = {error: "Invalid credentials"};
 
         const token = req.headers.authorization;// I decided to go with a header instead of cookie because we were taught to use headers in our axios with auth unit
         if (!token) return res.status(401).json(authError);

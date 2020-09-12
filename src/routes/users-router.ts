@@ -8,7 +8,6 @@ export const usersRouter = express.Router();
 
 // create
 usersRouter.post("/register", validateUserInfo, async (req, res) => {
-    console.log("Post called");
     try {
         const {username, password} = req.body;
 
@@ -16,7 +15,6 @@ usersRouter.post("/register", validateUserInfo, async (req, res) => {
             username,
             password: await bcrypt.hash(password, 13)
         });
-        console.log("newUser ", newUser, "Username", username);
         res.status(201).json(newUser);
     } catch (e) {
         console.log(e.stack);
@@ -27,7 +25,7 @@ usersRouter.post("/register", validateUserInfo, async (req, res) => {
 usersRouter.post("/login", async (req, res) => {
     try {
         const {username, password} = req.body;
-        const user = await usersModel.findBy(username).first();
+        const user = await usersModel.findBy({username}).first();
 
         if (!user) return res.status(401).json({error: "Username or password invalid"});
 
@@ -39,10 +37,10 @@ usersRouter.post("/login", async (req, res) => {
         const token = jwt.sign({
             userID: user.id
             // @ts-ignore
-        }, process.env.JWT_SECRET);// todo: type string | undefined unassignable...
+        }, process.env.JWT_SECRET, {expiresIn: "120m"});// todo: type string | undefined unassignable...
 
         res.cookie("SFRToken", token);
-        res.status(200).json({token, userId: user.id});
+        res.status(200).json({token, userId: user.id, username: user.username});
     } catch (e) {
         console.log(e.stack);
         res.status(500).json({error: "Error logging in"});
@@ -71,7 +69,7 @@ usersRouter.put("/user/:id", restrict, validateUserUpdate, async (req, res) => {
             id: req.body.id
         };
         const newUser = await usersModel.updateUser(newUserData);
-        res.status(201).json(newUser);
+        res.status(200).json(newUser);
     } catch (e) {
         console.log(e.stack);
         res.status(500).json({error: "Error updating user"});
