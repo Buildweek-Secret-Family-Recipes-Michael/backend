@@ -7,7 +7,7 @@ export async function validateUserInfo(req: any, res: any, next: any) {
         const {username, password} = req.body;
         if (!username || !password) return res.status(400).json({error: "Missing username or password"});
         const user = await usersModel.findBy({username}).first();
-        if (user) return res.status(409).json({message: "Username is already taken"});
+        if (user) return res.status(409).json({error: "Username is already taken"});
         req.body.user = user;
         next();
     } catch (e) {
