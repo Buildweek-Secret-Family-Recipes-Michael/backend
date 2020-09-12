@@ -1,4 +1,4 @@
-require("dotenv").config({path: "./src/.env"});//had to provide the path because my env isn't at root, todo: fix this
+require("dotenv").config();//had to provide the path because my env isn't at root
 
 module.exports = {
     development: {
