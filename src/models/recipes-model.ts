@@ -42,7 +42,7 @@ export async function updateRecipe(recipe: IRecipe) {
 }
 
 export function getRecipes() {
-    // todo: this function should only be called from a route protected by and admin account
+    // todo: this function should only be called from a route protected by an admin account
     return dbConfig("recipes");
 }
 

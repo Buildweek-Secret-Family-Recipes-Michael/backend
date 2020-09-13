@@ -1,6 +1,9 @@
 import {dbConfig} from "../data/dbConfig";
 import uuid from "uuid-1345";
 
+//I am NOT including an update function for this endpoint because the ingredients are shared, I don't want one user changing the ingredient for others.
+//A user can simply create a new ingredient
+
 export interface IIngredient {
     amount: string;
     name: string;
@@ -9,7 +12,7 @@ export interface IIngredient {
 }
 
 
-export function findById(id:string) {
+export function findById(id: string) {
     return dbConfig("ingredients")
         .where({id})
         .select("amount", "name", "recipeId")
@@ -17,6 +20,11 @@ export function findById(id:string) {
 }
 
 export async function createIngredient(ingredient: IIngredient) {
+    const ingExists = await findBy({name: ingredient.name}).first();//todo: Why can't I pass in just ingredient.name
+    if (ingExists) {
+        await dbConfig("recipes_ingredients").insert({recipeId: ingredient.recipeId, ingredientId: ingExists.id});
+        return findById(ingExists.id);
+    }
     const newIngredient = {
         ...ingredient,
         id: uuid.v4(),
@@ -25,45 +33,14 @@ export async function createIngredient(ingredient: IIngredient) {
     return findById(id);
 }
 
-/*
-export function findById(id: string) {
-    return dbConfig("recipes")
-        .where({id})
-        .select("name", "userId")
-        .first();
+export function findBy(filter: Partial<IIngredient>) {
+    return dbConfig("ingredients")
+        .where(filter);
 }
 
-export function findByUserId(userId: string) {
-    return dbConfig("recipes")
-        .where({userId})
-        .select("id", "name");
+export async function deleteIngredient(id: string) {
+    const ingredient = await findBy({id});
+    const changes = await dbConfig("ingredients").del().where({id});
+    if(!changes) throw new Error("Did not delete ingredient!");
+    return ingredient;
 }
-
-function getRecipeIngredients(recipeId:string) {
-    //expects recipeId and NOT userId. This will be a helper function to structure recipe results so we can put recipe instructions, ingredients in the same result
-
-}
-
-export async function createRecipe(recipe: IRecipe) {
-    const newRecipe = {
-        ...recipe,
-        id: uuid.v4()
-    };
-    const [id] = await dbConfig("recipes").insert(newRecipe).returning("id");
-    return findById(id);
-
-}
-
-export async function updateRecipe(recipe: IRecipe) {
-    const id: any = recipe.id;
-    await dbConfig("recipes").insert(recipe).where({id});
-    return findById(id);
-}
-
-export function findBy(filter: any) {
-    return dbConfig("recipes")
-        .select("id", "name", "userId")
-        .where({filter})
-        .first();
-}
- */

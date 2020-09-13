@@ -39,3 +39,5 @@ export function findBy(filter:Partial<IUser>) {
     return dbConfig("users")
         .where(filter);
 }
+
+//todo: write delete endpoint and method
