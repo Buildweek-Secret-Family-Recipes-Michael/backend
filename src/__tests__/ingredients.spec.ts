@@ -2,6 +2,7 @@ import {server} from "../../server";
 import {dbConfig} from "../data/dbConfig";
 import supertest from "supertest";
 import * as ingredientsModel from "../models/ingredients-model";
+import arrayContaining = jasmine.arrayContaining;
 
 
 beforeEach(async () => {
@@ -20,13 +21,30 @@ describe("Creates an ingredient", () => {
                 name: "sugar",
                 recipeId: "2ded4075-ded3-4938-9dae-f81f29c79ec8"
             };
-            console.log("Past new ing");
+
             const res = await supertest(server)
                 .post("/api/ingredients")
                 .set("content-type", "application/json")
                 .send(JSON.stringify(newIngredient));
 
             expect(res.status).toBe(201);
+            expect(res.body.name).toBe(newIngredient.name);
+            expect(res.body.amount).toBe(newIngredient.amount);
+        });
+    });
+    describe("When missing amount and name", () => {
+        it("sends a recipe without giving an amount and receives an error and 400 from the server", async () => {
+            const newIngredient = {name: "tomato paste", recipeId: "2ded4075-ded3-4938-9dae-f81f29c79ec8"};
+
+            const res = await supertest(server)
+                .post("/api/ingredients")
+                .set("content-type", "application/json")
+                .send(JSON.stringify(newIngredient));
+
+            expect(res.status).toBe(400);
+            expect(res.body.error).toBe("Ingredient data missing. Please make sure amount, name and recipeId are included");
+            expect(res.body.name).toBe(undefined);
+            expect(res.body.amount).toBe(undefined);
         });
     });
 });

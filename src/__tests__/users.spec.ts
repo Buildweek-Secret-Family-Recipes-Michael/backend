@@ -78,7 +78,7 @@ describe("Updates a user", () => {
     describe("When invalid user information is provided", () => {
         //If these tests stop passing it is because the jwt expired. Create one that does not expire!
         it("Provides a username that already exists", async () => {
-            const newUserInfo = ({username: "pokemon2", password: "newPass"});
+            const newUserInfo = ({username: "pokemon2", password: "newPass2"});
             const res = await supertest(server)
                 .put("/api/users/user/868f632e-dffc-41b0-872b-c612525e5651")
                 .set("content-type", "application/json")
