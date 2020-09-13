@@ -19,7 +19,7 @@ export async function validateRecipeId(req: any, res: any, next: any) {
         const matcher = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
         if (!recipeId.match(matcher)) return res.status(400).json({error: "Id provided is not a valid uuid"});
         const recipe = await recipesModel.findById(recipeId);
-        if(!recipe) return res.status(400).json({error: "Id provided does not match any recipe"});
+        if (!recipe) return res.status(400).json({error: "Id provided does not match any recipe"});
         req.body.recipe = recipe;
         next();
     } catch (e) {

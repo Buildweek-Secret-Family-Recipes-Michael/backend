@@ -25,11 +25,13 @@ export async function createIngredient(ingredient: IIngredient) {
         await dbConfig("recipes_ingredients").insert({recipeId: ingredient.recipeId, ingredientId: ingExists.id});
         return findById(ingExists.id);
     }
-    const newIngredient = {
-        ...ingredient,
-        id: uuid.v4(),
+    const newIngredient = {//not spreading ingredient because the ingredients table does not include a recipeId column, which is being passed in for the join table
+        amount: ingredient.amount,
+        name: ingredient.name,
+        id: uuid.v4()
     };
-    const [id] = await dbConfig("ingredients").insert(newIngredient).returning("id");
+    const [id] = await dbConfig("ingredients").insert(newIngredient).returning("id");//if the ingredient doesn't exist then it also needs to be added to the ingredients table
+    await dbConfig("recipes_ingredients").insert({recipeId: ingredient.recipeId, ingredientId: newIngredient.id});
     return findById(id);
 }
 
