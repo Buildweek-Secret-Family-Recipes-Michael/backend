@@ -68,7 +68,7 @@ describe("Updates a user", () => {
             const res = await supertest(server)
                 .put("/api/users/user/868f632e-dffc-41b0-872b-c612525e5651")
                 .set("content-type", "application/json")
-                .set("authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI4NjhmNjMyZS1kZmZjLTQxYjAtODcyYi1jNjEyNTI1ZTU2NTEiLCJpYXQiOjE1OTk5NDg4NjIsImV4cCI6MTU5OTk1NjA2Mn0.PRFLdfzJjySmks0Jt0FpZra2W1edY75ffmehJOu3Juc")
+                .set("authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI4NjhmNjMyZS1kZmZjLTQxYjAtODcyYi1jNjEyNTI1ZTU2NTEifQ.8WXM3KzmRoQkvweigGeYDpCVXEnPukrX7y0Mz5TsORc")
                 .send(JSON.stringify(newUserInfo));
 
             expect(res.status).toBe(200);
@@ -82,7 +82,7 @@ describe("Updates a user", () => {
             const res = await supertest(server)
                 .put("/api/users/user/868f632e-dffc-41b0-872b-c612525e5651")
                 .set("content-type", "application/json")
-                .set("authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI4NjhmNjMyZS1kZmZjLTQxYjAtODcyYi1jNjEyNTI1ZTU2NTEiLCJpYXQiOjE1OTk5NDg4NjIsImV4cCI6MTU5OTk1NjA2Mn0.PRFLdfzJjySmks0Jt0FpZra2W1edY75ffmehJOu3Juc")
+                .set("authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI4NjhmNjMyZS1kZmZjLTQxYjAtODcyYi1jNjEyNTI1ZTU2NTEifQ.8WXM3KzmRoQkvweigGeYDpCVXEnPukrX7y0Mz5TsORc")
                 .send(JSON.stringify(newUserInfo));
 
             expect(res.status).toBe(400);
@@ -94,7 +94,7 @@ describe("Updates a user", () => {
             const res = await supertest(server)
                 .put("/api/users/user/868f632e-dffc-41b0-872b-c612525e5651")
                 .set("content-type", "application/json")
-                .set("authorization", "eyJhbGciOiJIUzI1NiISInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI4NjhmNjMyZS1kZmZjLTQxYjAtODcyYi1jNjEyNTI1ZTU2NTEiLCJpYXQiOjE1OTk5NDg4NjIsImV4cCI6MTU5OTk1NjA2Mn0.PRFLdfzJjySmks0Jt0FpZra2W1edY75ffmehJOu3Juc")
+                .set("authorization", "EyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI4NjhmNjMyZS1kZmZjLTQxYjAtODcyYi1jNjEyNTI1ZTU2NTEifQ.8WXM3KzmRoQkvweigGeYDpCVXEnPukrX7y0Mz5TsORc")
                 .send(JSON.stringify(newUserInfo));
 
             expect(res.status).toBe(401);
@@ -106,7 +106,7 @@ describe("Updates a user", () => {
             const res = await supertest(server)
                 .put("/api/users/user/868f632e-dffc-41b0-872b-c612525e5651")
                 .set("content-type", "application/json")
-                .set("authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI4NjhmNjMyZS1kZmZjLTQxYjAtODcyYi1jNjEyNTI1ZTU2NTEiLCJpYXQiOjE1OTk5NDg4NjIsImV4cCI6MTU5OTk1NjA2Mn0.PRFLdfzJjySmks0Jt0FpZra2W1edY75ffmehJOu3Juc")
+                .set("authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI4NjhmNjMyZS1kZmZjLTQxYjAtODcyYi1jNjEyNTI1ZTU2NTEifQ.8WXM3KzmRoQkvweigGeYDpCVXEnPukrX7y0Mz5TsORc")
                 .send(JSON.stringify(newUserInfo));
 
             expect(res.status).toBe(400);
@@ -118,7 +118,7 @@ describe("Updates a user", () => {
             const res = await supertest(server)
                 .put("/api/users/user/8")
                 .set("content-type", "application/json")
-                .set("authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI4NjhmNjMyZS1kZmZjLTQxYjAtODcyYi1jNjEyNTI1ZTU2NTEiLCJpYXQiOjE1OTk5NDg4NjIsImV4cCI6MTU5OTk1NjA2Mn0.PRFLdfzJjySmks0Jt0FpZra2W1edY75ffmehJOu3Juc")
+                .set("authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI4NjhmNjMyZS1kZmZjLTQxYjAtODcyYi1jNjEyNTI1ZTU2NTEifQ.8WXM3KzmRoQkvweigGeYDpCVXEnPukrX7y0Mz5TsORc")
                 .send(JSON.stringify(newUserInfo));
 
             expect(res.status).toBe(400);

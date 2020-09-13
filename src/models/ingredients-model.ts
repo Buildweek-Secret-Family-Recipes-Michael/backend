@@ -15,13 +15,13 @@ export interface IIngredient {
 export function findById(id: string) {
     return dbConfig("ingredients")
         .where({id})
-        .select("amount", "name", "recipeId")
+        .select("amount", "name")
         .first();
 }
 
 export async function createIngredient(ingredient: IIngredient) {
     const ingExists = await findBy({name: ingredient.name}).first();//todo: Why can't I pass in just ingredient.name
-    if (ingExists) {
+    if (ingExists && ingExists.amount === ingredient.amount) {
         await dbConfig("recipes_ingredients").insert({recipeId: ingredient.recipeId, ingredientId: ingExists.id});
         return findById(ingExists.id);
     }
@@ -39,8 +39,8 @@ export function findBy(filter: Partial<IIngredient>) {
 }
 
 export async function deleteIngredient(id: string) {
-    const ingredient = await findBy({id});
+    const ingredient = await findBy({id}).first();
     const changes = await dbConfig("ingredients").del().where({id});
-    if(!changes) throw new Error("Did not delete ingredient!");
+    if (!changes) throw new Error("Did not delete ingredient!");
     return ingredient;
 }

@@ -19,6 +19,16 @@ ingredientsRouter.post("/", validateRecipeId, validateIngredientData, async (req
 });
 
 //read
+ingredientsRouter.get("/:id", async (req, res) => {//todo: validate ingredient id middleware
+    try {
+        const ingredient = await ingredientsModel.findById(req.params.id);
+        console.log(ingredient);
+        res.status(200).json(ingredient);
+    } catch (e) {
+        console.log(e.stack);
+        res.status(500).json({error: "Error getting ingredient"});
+    }
+});
 
 
 //update
@@ -27,3 +37,12 @@ ingredientsRouter.post("/", validateRecipeId, validateIngredientData, async (req
 
 
 //delete
+ingredientsRouter.delete("/:id", async (req, res) => {
+    try {
+        const deletedIngredient = await ingredientsModel.deleteIngredient(req.params.id);
+        res.status(200).json({deleted: deletedIngredient});
+    } catch (e) {
+        console.log(e.stack);
+        res.status(500).json({error: "Error deleting ingredient"});
+    }
+});
