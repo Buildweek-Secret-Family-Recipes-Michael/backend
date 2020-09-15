@@ -5,10 +5,12 @@ import * as ingredientsModel from "../models/ingredients-model";
 import arrayContaining = jasmine.arrayContaining;
 
 
+// * clears db and reseeds it to initial data before each individual test
 beforeEach(async () => {
-    await dbConfig.seed.run();
+    await dbConfig.migrate.latest();
+    return await dbConfig.seed.run();
 });
-
+// * closes any database connections after the tests in case it stays open
 afterAll(async () => {
     await dbConfig.destroy();
 });

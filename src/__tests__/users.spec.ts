@@ -4,10 +4,12 @@ import {dbConfig} from "../data/dbConfig";
 import supertest from "supertest";
 
 
+// * clears db and reseeds it to initial data before each individual test
 beforeEach(async () => {
-    await dbConfig.seed.run();
+    await dbConfig.migrate.latest();
+    return await dbConfig.seed.run();
 });
-
+// * closes any database connections after the tests in case it stays open
 afterAll(async () => {
     await dbConfig.destroy();
 });
@@ -25,6 +27,8 @@ describe("Creates a new user", () => {
                 .post("/api/users/register")
                 .set("content-type", "application/json")
                 .send(JSON.stringify(newUser));
+
+            console.log("body", res.body);
 
             expect(res.status).toBe(201);
             expect(res.body.username).toBe(newUser.username);
