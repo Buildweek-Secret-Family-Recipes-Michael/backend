@@ -5,6 +5,7 @@ export interface IRecipe {
     name: string;
     id?: string;
     userId: string;
+    category: string;
 }
 
 export function findById(id: string) {
