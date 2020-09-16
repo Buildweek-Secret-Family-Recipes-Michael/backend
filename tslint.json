@@ -1,0 +1,18 @@
+{
+  "extends": "tslint:recommended",
+  "rules": {
+    "member-ordering": false,
+    "object-literal-sort-keys": false,
+    "ordered-imports": false,
+    "quotemark": [true, "double"],
+    "no-var-requires": false,
+    "semicolon": true,
+    "no-console": false,
+    "comment-format": false
+  },
+  "linterOptions": {
+    "exclude": [
+      "./node_modules/**"
+    ]
+  }
+}
