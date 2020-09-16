@@ -17,7 +17,7 @@ afterAll(async () => {
 
 describe("Creates an ingredient", () => {
     describe("When valid ingredient info is provided", () => {
-        it("creates the ingredient and receives it back from the server with a 200", async () => {
+        it("creates the ingredient and receives it back from the server with a 201", async () => {
             const newIngredient = {
                 amount: "1 cup",
                 name: "sugar",

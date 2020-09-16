@@ -6,6 +6,14 @@ import {restrict, validateUserInfo, validateUserUpdate} from "../middleware/user
 
 export const usersRouter = express.Router();
 
+declare global {
+    namespace Express {
+        interface Request {
+            id: string;
+        }
+    }
+}
+
 // create
 usersRouter.post("/register", validateUserInfo, async (req, res) => {
     try {
@@ -66,7 +74,7 @@ usersRouter.put("/user/:id", restrict, validateUserUpdate, async (req, res) => {
         const newUserData = {
             username,
             password: await bcrypt.hash(password, 13),
-            id: req.body.id
+            id: req.id
         };
         const newUser = await usersModel.updateUser(newUserData);
         res.status(200).json(newUser);

@@ -1,6 +1,15 @@
 import * as recipesModel from "../models/recipes-model";
 import jwt from "jsonwebtoken";
 
+declare global {
+    namespace Express {
+        interface Request {
+            user: { username: string, password: string };
+            recipe: {name: string, userId: string};
+        }
+    }
+}
+
 export async function validateRecipeInfo(req: any, res: any, next: any) {
     try {//validation for creating a new recipe
         const {name, userId} = req.body;
@@ -20,7 +29,7 @@ export async function validateRecipeId(req: any, res: any, next: any) {
         if (!recipeId.match(matcher)) return res.status(400).json({error: "Id provided is not a valid uuid"});
         const recipe = await recipesModel.findById(recipeId);
         if (!recipe) return res.status(400).json({error: "Id provided does not match any recipe"});
-        req.body.recipe = recipe;
+        req.recipe = recipe;
         next();
     } catch (e) {
         console.log(e.stack);

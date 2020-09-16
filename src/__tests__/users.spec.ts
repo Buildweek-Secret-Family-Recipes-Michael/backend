@@ -28,8 +28,6 @@ describe("Creates a new user", () => {
                 .set("content-type", "application/json")
                 .send(JSON.stringify(newUser));
 
-            console.log("body", res.body);
-
             expect(res.status).toBe(201);
             expect(res.body.username).toBe(newUser.username);
             expect(res.body.id).toMatch(matcher);
