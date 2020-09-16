@@ -17,6 +17,7 @@ export async function up(knex: Knex): Promise<void> {
         tableBuilder.uuid("id").unique().notNullable().primary();
         tableBuilder.text("name").notNullable();
         tableBuilder.uuid("userId").notNullable().references("id").inTable("users").onDelete("CASCADE").onUpdate("CASCADE");
+        //todo: Need to add category
     });
 
     await knex.schema.createTable("ingredients", tableBuilder => {
@@ -50,7 +51,6 @@ export async function up(knex: Knex): Promise<void> {
         tableBuilder.uuid("recipeId").notNullable().references("id").inTable("recipes").onDelete("CASCADE").onUpdate("CASCADE");
         tableBuilder.uuid("ingredientId").notNullable().references("id").inTable("ingredients").onDelete("CASCADE").onUpdate("CASCADE");
         tableBuilder.primary(["recipeId", "ingredientId"]);
-
     });
 }
 

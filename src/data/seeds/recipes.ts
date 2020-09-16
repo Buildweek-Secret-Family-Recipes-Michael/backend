@@ -1,4 +1,5 @@
 import * as Knex from "knex";
+//to generate uuids: https://www.uuidgenerator.net/version4
 
 export async function seed(knex: Knex): Promise<void> {
     // Deletes ALL existing entries
