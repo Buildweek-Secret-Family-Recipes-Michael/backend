@@ -1,9 +1,9 @@
 ##.env config
-DB_HOST=""
-DB_DATABASE=""
-DB_USER=""
-DB_PORT=""
-DB_PASSWORD=""
-PORT="4000"
+DB_HOST=""<br/>
+DB_DATABASE=""<br/>
+DB_USER=""<br/>
+DB_PORT=""<br/>
+DB_PASSWORD=""<br/>
+PORT="4000"<br/>
 
-JWT_SECRET=""
+JWT_SECRET=""<br/>
