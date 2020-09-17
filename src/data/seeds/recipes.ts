@@ -30,18 +30,20 @@ export async function seed(knex: Knex): Promise<void> {
     ]);
 
     await knex("recipes").insert([
-        {id: "2ded4075-ded3-4938-9dae-f81f29c79ec8", name: "cookies", userId: "797e2a5a-6458-4b37-b0f0-d82e3f430117"},
-        {id: "5305e4b7-82ff-4ff7-b267-d033174048c2", name: "break", userId: "797e2a5a-6458-4b37-b0f0-d82e3f430117"},
-        {id: "02155b98-2022-482c-b6ee-20f0e3d2b58d", name: "pancakes", userId: "f620415e-7fa8-4d3c-8a43-a0a30e6706b2"},
+        {id: "2ded4075-ded3-4938-9dae-f81f29c79ec8", name: "cookies", userId: "797e2a5a-6458-4b37-b0f0-d82e3f430117", category: "Dessert"},
+        {id: "5305e4b7-82ff-4ff7-b267-d033174048c2", name: "bread", userId: "797e2a5a-6458-4b37-b0f0-d82e3f430117", category: "Side"},
+        {id: "02155b98-2022-482c-b6ee-20f0e3d2b58d", name: "pancakes", userId: "f620415e-7fa8-4d3c-8a43-a0a30e6706b2", category: "Breakfast"},
         {
             id: "5997052e-028c-41c4-b2e2-5616f5b7854b",
             name: "chickie nuggies",
-            userId: "f620415e-7fa8-4d3c-8a43-a0a30e6706b2"
+            userId: "f620415e-7fa8-4d3c-8a43-a0a30e6706b2",
+            category: "Dinner"
         },
         {
             id: "df680068-70b9-4b0f-a2cc-f20bc1a62599",
             name: "saucy nugs",
-            userId: "f620415e-7fa8-4d3c-8a43-a0a30e6706b2"
+            userId: "f620415e-7fa8-4d3c-8a43-a0a30e6706b2",
+            category: "Lunch"
         },
     ]);
 

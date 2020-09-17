@@ -2,7 +2,6 @@ import {server} from "../../server";
 import {dbConfig} from "../data/dbConfig";
 import supertest from "supertest";
 import * as ingredientsModel from "../models/ingredients-model";
-import arrayContaining = jasmine.arrayContaining;
 
 
 // * clears db and reseeds it to initial data before each individual test
@@ -35,7 +34,7 @@ describe("Creates an ingredient", () => {
         });
     });
     describe("When missing amount and name", () => {
-        it("sends a recipe without giving an amount and receives an error and 400 from the server", async () => {
+        it("sends an ingredients without giving an amount and receives an error and 400 from the server", async () => {
             const newIngredient = {name: "tomato paste", recipeId: "2ded4075-ded3-4938-9dae-f81f29c79ec8"};
 
             const res = await supertest(server)

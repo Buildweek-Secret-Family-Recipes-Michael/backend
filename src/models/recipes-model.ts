@@ -14,21 +14,19 @@ export interface IRecipe {
 }
 
 export function findById(id: string) {
-    return dbConfig("recipes")
+    const recipe = dbConfig("recipes")
         .where({id})
-        .select("name", "userId")
+        .select("name", "category", "userId")
         .first();
+    const ingredients = ingredientsDb.findRecipeIngredients(id);
+
+    return {...recipe, ingredients};
 }
 
 export function findByUserId(userId: string) {
     return dbConfig("recipes")
         .where({userId})
-        .select("id", "name");
-}
-
-function getRecipeIngredients(recipeId:string) {
-    //expects recipeId and NOT userId. This will be a helper function to structure recipe results so we can put recipe instructions, ingredients in the same result
-
+        .select("id", "name", "category");
 }
 
 export async function createRecipe(recipe: IRecipe) {

@@ -20,9 +20,7 @@ export function findById(id: string) {
 }
 
 export async function createIngredient(ingredient: IIngredient) {
-    console.log(ingredient);
     const ingExists = await findBy({name: ingredient.name}, {amount: ingredient.amount}).first();//todo: Why can't I pass in just ingredient.name
-    console.log("ing exist", ingExists);
     if (ingExists && (ingExists.amount === ingredient.amount)) {
         if (await findRecipeIngredient(ingredient.recipeId, ingExists.id)) return findById(ingExists.id);
         await dbConfig("recipes_ingredients").insert({recipeId: ingredient.recipeId, ingredientId: ingExists.id});
@@ -51,6 +49,13 @@ export function findRecipeIngredient(recipeId: string, ingredientId: string) {
         .where({recipeId})
         .where({ingredientId})
         .first();
+}
+
+export async function findRecipeIngredients(recipeId: string) {
+    const ingredientIds: any[] = await dbConfig("recipes_ingredients").select("ingredientId").where({recipeId});
+    const ingredients = ingredientIds.forEach(([id]) => {
+        return findById(id);
+    });
 }
 
 export async function deleteIngredient(id: string) {
