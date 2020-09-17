@@ -51,6 +51,7 @@ export async function updateRecipe(recipe: IRecipe) {
     if(!recipe.id) throw new Error("No recipe id provided");
 
     const id: string = recipe.id;
+    if(recipe.ingredients?.length! > 0) recipe.ingredients?.forEach(ingredient => ingredientsDb.createIngredient(ingredient));
     await dbConfig("recipes").insert(recipe).where({id});
     return findById(id);
 }
