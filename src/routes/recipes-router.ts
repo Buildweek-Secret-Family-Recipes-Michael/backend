@@ -8,11 +8,13 @@ export const recipesRouter = express.Router();
 
 //create
 recipesRouter.post("/", validateRecipeInfo, async (req, res) => {
-    try {//todo: this route needs to also post to users_recipes table. Edit: the users_* join tables are probably not needed since there is no many to many rel
-        const {name, userId} = req.body;
-        const newRecipe = await recipesModel.createRecipe({name, userId});
+    try {//todo: this route needs to also post to users_recipes table
+        const {name, userId, category} = req.body;
+        const newRecipe = await recipesModel.createRecipe({name, userId, category});
 
         //todo: create instructions
+
+        //todo: create ingredients
         res.status(201).json(newRecipe);
     } catch (e) {
         console.log(e.stack);

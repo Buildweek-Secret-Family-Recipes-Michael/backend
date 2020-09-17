@@ -1,11 +1,16 @@
 import {dbConfig} from "../data/dbConfig";
 import uuid from "uuid-1345";
+import * as ingredientsDb from "./ingredients-model";
+import {IIngredient} from "./ingredients-model";
 
 export interface IRecipe {
     name: string;
     id?: string;
     userId: string;
     category: string;
+
+    instructions?: string[];
+    ingredients?: IIngredient[];
 }
 
 export function findById(id: string) {
@@ -27,17 +32,25 @@ function getRecipeIngredients(recipeId:string) {
 }
 
 export async function createRecipe(recipe: IRecipe) {
+    const recipeId = uuid.v4();
     const newRecipe = {
         ...recipe,
-        id: uuid.v4()
+        id: recipeId
     };
-    const [id] = await dbConfig("recipes").insert(newRecipe).returning("id");
-    return findById(id);
+
+    //if ingredients were provided, map over that array and create each ingredient using the ingredients model
+    if(recipe.ingredients?.length! > 0) recipe.ingredients?.forEach(ingredient => ingredientsDb.createIngredient(ingredient));
+
+    await dbConfig("users_recipes").insert({recipeId, userId: recipe.userId});//create join table entry
+    await dbConfig("recipes").insert(newRecipe);
+    return findById(recipeId);
 
 }
 
 export async function updateRecipe(recipe: IRecipe) {
-    const id: any = recipe.id;
+    if(!recipe.id) throw new Error("No recipe id provided");
+
+    const id: string = recipe.id;
     await dbConfig("recipes").insert(recipe).where({id});
     return findById(id);
 }
