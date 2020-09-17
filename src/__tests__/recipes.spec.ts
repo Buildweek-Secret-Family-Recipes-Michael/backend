@@ -16,18 +16,24 @@ afterAll(async () => {
 });
 
 
-describe("Creates a recipe",  () => {
+describe("Creates a recipe", () => {
     describe("when recipe contains valid name, userId, and category provided", () => {
         it("receives the new recipe and 200 from the server", async () => {
-            const newRecipe:IRecipe = {
+            const newRecipe: IRecipe = {
                 name: "Chicken nuggets",
                 userId: "868f632e-dffc-41b0-872b-c612525e5651",
-                category: "dinner"
-            }
+                category: "dinner",
+                ingredients: [
+                    {amount: "1 cup", name: "chicken"},
+                    {amount: "2 cups", name: "nuggets"},
+                    {amount: "0.5 cups", name: "yumm"},
+                ]
+
+            };
             const res = await supertest(server)
                 .post("/api/recipes")
                 .set("content-type", "application/json")
-                .send(JSON.stringify(newRecipe));
+                .send(newRecipe);
 
             expect(res.status).toBe(201);
             expect(res.body.name).toBe(newRecipe.name);

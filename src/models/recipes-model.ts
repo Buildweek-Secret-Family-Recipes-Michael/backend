@@ -13,14 +13,15 @@ export interface IRecipe {
     ingredients?: IIngredient[];
 }
 
-export function findById(id: string) {
-    const recipe = dbConfig("recipes")
+export async function findById(id: string) {
+    const recipe = await dbConfig("recipes")
         .where({id})
         .select("name", "category", "userId")
         .first();
-    const ingredients = ingredientsDb.findRecipeIngredients(id);
+    const ingredients = await ingredientsDb.findRecipeIngredients(id);
+    console.log("ingredients", ingredients);
 
-    return {...recipe, ingredients};
+    return {...recipe};
 }
 
 export function findByUserId(userId: string) {
@@ -31,25 +32,34 @@ export function findByUserId(userId: string) {
 
 export async function createRecipe(recipe: IRecipe) {
     const recipeId = uuid.v4();
+    const {name, userId, category} = recipe;
     const newRecipe = {
-        ...recipe,
+        name,
+        userId,
+        category,
         id: recipeId
     };
 
     //if ingredients were provided, map over that array and create each ingredient using the ingredients model
-    if(recipe.ingredients?.length! > 0) recipe.ingredients?.forEach(ingredient => ingredientsDb.createIngredient(ingredient));
 
-    await dbConfig("users_recipes").insert({recipeId, userId: recipe.userId});//create join table entry
+    console.log("ingredients length", recipe.ingredients?.length);
+    if(recipe.ingredients) {
+        if (recipe.ingredients.length > 0) recipe.ingredients.forEach(ingredient => {
+            console.log("ingredient ", ingredient);
+            ingredientsDb.createIngredient(ingredient, recipeId);
+        });
+    }
+
     await dbConfig("recipes").insert(newRecipe);
+    await dbConfig("users_recipes").insert({recipeId, userId: recipe.userId});//create join table entry
     return findById(recipeId);
-
 }
 
 export async function updateRecipe(recipe: IRecipe) {
     if(!recipe.id) throw new Error("No recipe id provided");
 
     const id: string = recipe.id;
-    if(recipe.ingredients?.length! > 0) recipe.ingredients?.forEach(ingredient => ingredientsDb.createIngredient(ingredient));
+    if(recipe.ingredients?.length! > 0) recipe.ingredients?.forEach(ingredient => ingredientsDb.createIngredient(ingredient, id));
     await dbConfig("recipes").insert(recipe).where({id});
     return findById(id);
 }

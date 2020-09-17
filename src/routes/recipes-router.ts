@@ -9,8 +9,9 @@ export const recipesRouter = express.Router();
 //create
 recipesRouter.post("/", validateRecipeInfo, async (req, res) => {
     try {//todo: this route needs to also post to users_recipes table
-        const {name, userId, category} = req.body;
-        const newRecipe = await recipesModel.createRecipe({name, userId, category});
+        const {name, userId, category, ingredients} = req.body;
+        const newRecipe = await recipesModel.createRecipe({name, userId, category, ingredients});
+        console.log(newRecipe);
 
         //todo: create instructions
 
@@ -47,6 +48,7 @@ recipesRouter.get("/:id", restrict, validateRecipeId, async (req, res) => {
 });
 
 recipesRouter.get("/user/:id", restrict, validateUserId, async (req, res) => {
+    //todo: req.body.token => req.token
     try {
         //this route relies on the recipe post route posting recipes to the users_recipes table
         const userId = req.body.token.userID;

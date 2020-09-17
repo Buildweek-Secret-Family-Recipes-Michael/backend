@@ -10,7 +10,7 @@ export const ingredientsRouter = express.Router();
 ingredientsRouter.post("/", validateRecipeId, validateIngredientData, async (req, res) => {
     try {
         const {amount, name, recipeId} = req.body;//Destructuring just to make sure nothing else gets passed to db
-        const newIngredient = await ingredientsModel.createIngredient({amount, name, recipeId});
+        const newIngredient = await ingredientsModel.createIngredient({amount, name}, recipeId);
         res.status(201).json(newIngredient);
     } catch (e) {
         console.log(e.stack);

@@ -7,7 +7,6 @@ import uuid from "uuid-1345";
 export interface IIngredient {
     amount: string;
     name: string;
-    recipeId: string;
     id?: string;
 }
 
@@ -19,11 +18,11 @@ export function findById(id: string) {
         .first();
 }
 
-export async function createIngredient(ingredient: IIngredient) {
+export async function createIngredient(ingredient: IIngredient, recipeId: string) {//recipeId is a separate param because when creating a recipe the id is unknown when the endpoint is hit
     const ingExists = await findBy({name: ingredient.name}, {amount: ingredient.amount}).first();//todo: Why can't I pass in just ingredient.name
     if (ingExists && (ingExists.amount === ingredient.amount)) {
-        if (await findRecipeIngredient(ingredient.recipeId, ingExists.id)) return findById(ingExists.id);
-        await dbConfig("recipes_ingredients").insert({recipeId: ingredient.recipeId, ingredientId: ingExists.id});
+        if (await findRecipeIngredient(recipeId, ingExists.id)) return findById(ingExists.id);
+        await dbConfig("recipes_ingredients").insert({recipeId: recipeId, ingredientId: ingExists.id});
         return findById(ingExists.id);
     }
     const id = uuid.v4();
@@ -34,7 +33,7 @@ export async function createIngredient(ingredient: IIngredient) {
     };
     await dbConfig("ingredients").insert(newIngredient);//if the ingredient doesn't exist then it also needs to be added to the ingredients table
 
-    await dbConfig("recipes_ingredients").insert({recipeId: ingredient.recipeId, ingredientId: newIngredient.id});
+    await dbConfig("recipes_ingredients").insert({recipeId, ingredientId: newIngredient.id});
     return findById(id);
 }
 
@@ -53,9 +52,10 @@ export function findRecipeIngredient(recipeId: string, ingredientId: string) {
 
 export async function findRecipeIngredients(recipeId: string) {
     const ingredientIds: any[] = await dbConfig("recipes_ingredients").select("ingredientId").where({recipeId});
-    const ingredients = ingredientIds.forEach(([id]) => {
+    const ingredients = ingredientIds.forEach(async (id) => {
         return findById(id);
     });
+    return ingredients;
 }
 
 export async function deleteIngredient(id: string) {
