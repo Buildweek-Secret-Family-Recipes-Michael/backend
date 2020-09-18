@@ -72,15 +72,16 @@ export async function validateUserUpdate(req: any, res: any, next: any) {
 
 export async function restrict(req: any, res: any, next: any) {// todo: note to self: This middleware is not meant to be used on the login route
     try {
-        const authError = {error: "Invalid credentials"};
+        const authError = {error: "Invalid credentials, please try logging in again"};
 
-        const token = req.headers.authorization;// I decided to go with a header instead of cookie because we were taught to use headers in our axios with auth unit
+        const token = req.headers.authorization;
         if (!token) return res.status(401).json(authError);
 
         // decode token, resign payload, and check if signature is valid
         jwt.verify(token, process.env.JWT_SECRET!, (err:any, decoded: any) => {// todo: possible undefined string|und for env var
             if (err) return res.status(401).json(authError);
             req.token = decoded;
+            console.log("Token data: ", req.token);
             next();
         });
     } catch (e) {

@@ -7,13 +7,12 @@ export const recipesRouter = express.Router();
 
 
 //create
-recipesRouter.post("/", validateRecipeInfo, async (req, res) => {
-    try {//todo: this route needs to also post to users_recipes table
+recipesRouter.post("/", validateRecipeInfo, restrict, async (req, res) => {
+    try {
         const {name, userId, category, ingredients, instructions} = req.body;
         const newRecipe = await recipesModel.createRecipe({name, userId, category, ingredients, instructions});
         console.log(newRecipe);
 
-        //todo: create instructions
         res.status(201).json(newRecipe);
     } catch (e) {
         console.log(e.stack);
