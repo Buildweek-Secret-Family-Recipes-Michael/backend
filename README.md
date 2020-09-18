@@ -12,20 +12,20 @@ JWT_SECRET=""<br/>
 ## Data models
 Recipe Model:
 ```sh
-{<br/>
-    name: "Chicken nuggets",<br/>
-    userId: "33e86908-5ec6-47ca-b1bf-ed1bf3bcb1e7",<br/>
-    category: "dinner",<br/>
-    ingredients: [<br/>
-        {amount: "0.5 cups", name: "yumm"},<br/>
-        {amount: "1 cup", name: "chicken"},<br/>
-        {amount: "2 cups", name: "nuggets"},<br/>
-    ],<br/>
-    instructions: [<br/>
-        {stepNum: "1", name: "cook chicken"},<br/>
-        {stepNum: "2", name: "cook nuggets"},<br/>
-        {stepNum: "3", name: "eat, yumm!"}<br/>
-    ]<br/>
+{
+    name: "Chicken nuggets",
+    userId: "33e86908-5ec6-47ca-b1bf-ed1bf3bcb1e7",
+    category: "dinner",
+    ingredients: [
+        {amount: "0.5 cups", name: "yumm"},
+        {amount: "1 cup", name: "chicken"},
+        {amount: "2 cups", name: "nuggets"},
+    ],
+    instructions: [
+        {stepNum: "1", name: "cook chicken"},
+        {stepNum: "2", name: "cook nuggets"},
+        {stepNum: "3", name: "eat, yumm!"}
+    ]
 };
 ```
 
