@@ -9,7 +9,10 @@ export const recipesRouter = express.Router();
 //create
 recipesRouter.post("/", validateRecipeInfo, restrict, async (req, res) => {
     try {
-        const {name, userId, category, ingredients, instructions} = req.body;
+        const {name, category, ingredients, instructions} = req.body;
+        const userId = req.token.userId;
+        console.log("userId", userId);
+        console.log("Token", req.token);
         const newRecipe = await recipesModel.createRecipe({name, userId, category, ingredients, instructions});
         console.log(newRecipe);
 
@@ -37,7 +40,7 @@ recipesRouter.get("/", restrict, async (req, res) => {
 recipesRouter.get("/:id", restrict, validateRecipeId, async (req, res) => {
     try {
         //recipe retreived by validateRecipeId middleware
-        res.status(200).json(req.body.recipe);
+        res.status(200).json(req.recipe);
     } catch (e) {
         console.log(e.stack);
         res.status(500).json({error: "Error getting recipe by id"});
@@ -48,7 +51,7 @@ recipesRouter.get("/user/:id", restrict, validateUserId, async (req, res) => {
     //todo: req.body.token => req.token
     try {
         //this route relies on the recipe post route posting recipes to the users_recipes table
-        const userId = req.body.token.userID;
+        const userId = req.token.userID;
         console.log(userId);
         if(userId !== req.params.id) res.status(403).json({message: "Authorization token does not match provided user id"});
         const usersRecipes = await recipesModel.findByUserId(userId);
