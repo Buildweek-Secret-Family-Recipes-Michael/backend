@@ -47,6 +47,6 @@ Baseurl: https://secret-family-recipes-pt16.herokuapp.com/
 
 #### Users
 note: The update endpoint is NOT currently secure by way of reset password email or anything like that.
-* post user: /api/user/register
-* login: /api/user
-* update user: /user/:id 
+* post user: /api/users/register
+* login: /api/users
+* update user: /users/:id 
