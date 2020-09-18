@@ -11,7 +11,7 @@ JWT_SECRET=""<br/>
 
 ## Data models
 #### Recipe Model:
-```sh
+```$xslt
 {
     name: "Chicken nuggets",
     userId: "33e86908-5ec6-47ca-b1bf-ed1bf3bcb1e7",
@@ -30,7 +30,7 @@ JWT_SECRET=""<br/>
 ```
 
 #### User Model:
-```sh
+```$xslt
 {
     username: "userName",
     password: "password"
@@ -42,11 +42,70 @@ Baseurl: https://secret-family-recipes-pt16.herokuapp.com/
 
 
 #### Recipes:
-* post recipe: /api/recipes
+* post recipe: /api/recipes<br/>
+This is a restricted route, and a token needs to be given in the authorization header
+#####data models that can be passed:
+```$xslt
+{
+    name: "Chicken nuggets",
+    category: "dinner",
+    ingredients: [
+        {amount: "0.5 cups", name: "yumm"},
+    ],
+    instructions: [
+        {stepNum: "1", name: "cook chicken"},
+    ]
+};
 
+
+{
+    name: "Chicken nuggets",
+    category: "dinner",
+    instructions: [
+        {stepNum: "1", name: "cook chicken"},
+    ]
+};
+
+
+{
+    name: "Chicken nuggets",
+    category: "dinner",
+    ingredients: [
+        {amount: "0.5 cups", name: "yumm"},
+    ],
+};
+
+
+{
+    name: "Chicken nuggets",
+    category: "dinner",
+};
+
+```
 
 #### Users
-note: The update endpoint is NOT currently secure by way of reset password email or anything like that.
 * post user: /api/users/register
+#####data models that can be passed:
+```$xslt
+{
+    username: "User",
+    password: "password"
+}
+```
 * login: /api/users
-* update user: /users/:id 
+#####data models that can be passed:
+```$xslt
+{
+    username: "User",
+    password: "password"
+}
+```
+* update user: /users/:id<br/>
+This endpoint can only be used for updating username at the moment, and a token needs to be given in the authorization header
+#####data models that can be passed:
+```$xslt
+{
+    username: "User",
+    password: "password"
+}
+```
