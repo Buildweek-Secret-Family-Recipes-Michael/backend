@@ -1,7 +1,9 @@
 import {dbConfig} from "../data/dbConfig";
 import uuid from "uuid-1345";
-import * as ingredientsDb from "./ingredients-model";
+import * as ingredientsModel from "./ingredients-model";
+import * as instructionsModel from "./instructions-model";
 import {IIngredient} from "./ingredients-model";
+import {IInstruction} from "./instructions-model";
 
 export interface IRecipe {
     name: string;
@@ -9,7 +11,7 @@ export interface IRecipe {
     userId: string;
     category: string;
 
-    instructions?: string[];
+    instructions?: IInstruction[];
     ingredients?: IIngredient[];
 }
 
@@ -18,8 +20,7 @@ export async function findById(id: string) {
         .where({id})
         .select("name", "category", "userId")
         .first();
-    const ingredients = await ingredientsDb.findRecipeIngredients(id);
-    console.log("ingredients", ingredients);
+    const ingredients = await ingredientsModel.findRecipeIngredients(id);
 
     return {...recipe, ingredients: ingredients};
 }
@@ -42,24 +43,29 @@ export async function createRecipe(recipe: IRecipe) {
 
     //if ingredients were provided, map over that array and create each ingredient using the ingredients model
 
-    console.log("ingredients length", recipe.ingredients?.length);
     if(recipe.ingredients) {
         if (recipe.ingredients.length > 0) recipe.ingredients.forEach(ingredient => {
-            console.log("ingredient ", ingredient);
-            ingredientsDb.createIngredient(ingredient, recipeId);
+            ingredientsModel.createIngredient(ingredient, recipeId);
+        });
+    }
+
+    if(recipe.instructions){
+        if(recipe.instructions.length > 0) recipe.instructions.forEach( (instruction) => {
+            instructionsModel.createInstruction(instruction);
         });
     }
 
     await dbConfig("recipes").insert(newRecipe);
     await dbConfig("users_recipes").insert({recipeId, userId: recipe.userId});//create join table entry
-    return findById(recipeId);
+    return findById(recipeId);//todo: get instructions
 }
 
 export async function updateRecipe(recipe: IRecipe) {
+    //todo: this needs to be completely rewritten
     if(!recipe.id) throw new Error("No recipe id provided");
 
     const id: string = recipe.id;
-    if(recipe.ingredients?.length! > 0) recipe.ingredients?.forEach(ingredient => ingredientsDb.createIngredient(ingredient, id));
+    if(recipe.ingredients?.length! > 0) recipe.ingredients?.forEach(ingredient => ingredientsModel.createIngredient(ingredient, id));
     await dbConfig("recipes").insert(recipe).where({id});
     return findById(id);
 }

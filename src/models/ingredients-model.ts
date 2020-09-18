@@ -19,7 +19,6 @@ export function findById(id: string) {
 }
 
 export async function createIngredient(ingredient: IIngredient, recipeId: string) {//recipeId is a separate param because when creating a recipe the id is unknown when the endpoint is hit
-    console.log("Create ing called");
     const ingExists = await findBy({name: ingredient.name}, {amount: ingredient.amount}).first();//todo: Why can't I pass in just ingredient.name
     if (ingExists && (ingExists.amount === ingredient.amount)) {
         if (await findRecipeIngredient(recipeId, ingExists.id)) return findById(ingExists.id);
@@ -53,18 +52,15 @@ export function findRecipeIngredient(recipeId: string, ingredientId: string) {
 
 export async function findRecipeIngredients(recipeId: string) {
     const ingredientIds: any[] = await dbConfig("recipes_ingredients").select("ingredientId").where({recipeId});
-    console.log("ingredient ids", ingredientIds);
 
     let ingredients = [];
     for(let i = 0; i < ingredientIds.length; i++){
         ingredients.push(await findById(ingredientIds[i].ingredientId)
             .then((res:any) =>{
-                console.log("res", res);
                 return res;
             }));
     }
     //todo: look into promise.all
-    console.log("Ingredients from findRecipeIngredients", ingredients);
     return ingredients;
 }
 

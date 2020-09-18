@@ -24,9 +24,9 @@ describe("Creates a recipe", () => {
                 userId: "868f632e-dffc-41b0-872b-c612525e5651",
                 category: "dinner",
                 ingredients: [
+                    {amount: "0.5 cups", name: "yumm"},
                     {amount: "1 cup", name: "chicken"},
                     {amount: "2 cups", name: "nuggets"},
-                    {amount: "0.5 cups", name: "yumm"},
                 ]
 
             };
@@ -39,6 +39,8 @@ describe("Creates a recipe", () => {
             expect(res.body.name).toBe(newRecipe.name);
             expect(res.body.userId).toBe(newRecipe.userId);
             expect(res.body.category).toBe(newRecipe.category);
+            //this test can fail because json does not guarantee the order of an array
+            expect(res.body.ingredients[0]?.amount).toBe(newRecipe.ingredients![0].amount);//asserting it will exist because it always will in this test
         });
     });
 });
