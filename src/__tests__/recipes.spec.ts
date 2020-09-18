@@ -33,8 +33,8 @@ describe("Creates a recipe", () => {
                     {stepNum: "2", name: "cook nuggets"},
                     {stepNum: "3", name: "eat, yumm!"}
                 ]
-
             };
+
             const res = await supertest(server)
                 .post("/api/recipes")
                 .set("content-type", "application/json")
