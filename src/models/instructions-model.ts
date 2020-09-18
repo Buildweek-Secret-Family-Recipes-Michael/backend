@@ -3,18 +3,19 @@ import uuid from "uuid-1345";
 
 
 export interface IInstruction {
-    stepNumber: string;
+    stepNum: string;
     name: string;
-    recipeId: string;
+    recipeId?: string;
     id?: string;
 }
 
-export async function createInstruction(instruction: IInstruction) {
+export async function createInstruction(instruction: IInstruction, recipeId: string) {//recipeId passed in as param because it won't be known right away on create recipe
     const id = uuid.v4();
 
-    const {stepNumber, name, recipeId} = instruction;
+    const {stepNum, name} = instruction;
+    console.log(recipeId);
     const newInstruction ={
-        stepNumber,
+        stepNum,
         name,
         recipeId,
         id
@@ -26,5 +27,9 @@ export async function createInstruction(instruction: IInstruction) {
 
 export async function findById(id: string) {
     return dbConfig("instructions").where({id}).first();
+}
+
+export async function findRecipeInstructions(recipeId: string) {
+    return dbConfig("instructions").where({recipeId}).orderBy("stepNum");
 
 }
