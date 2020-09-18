@@ -10,7 +10,7 @@ JWT_SECRET=""<br/>
 
 
 ## Data models
-Recipe Model:
+#### Recipe Model:
 ```sh
 {
     name: "Chicken nuggets",
@@ -29,7 +29,7 @@ Recipe Model:
 };
 ```
 
-User Model:
+#### User Model:
 ```sh
 {
     username: "userName",
@@ -38,3 +38,15 @@ User Model:
 ```
 
 ## Endpoints
+Baseurl: https://secret-family-recipes-pt16.herokuapp.com/
+
+
+#### Recipes:
+* post recipe: /api/recipes
+
+
+#### Users
+note: The update endpoint is NOT currently secure by way of reset password email or anything like that.
+* post user: /api/user/register
+* login: /api/user
+* update user: /user/:id 
