@@ -12,8 +12,8 @@ declare global {
 
 export async function validateRecipeInfo(req: any, res: any, next: any) {
     try {//validation for creating a new recipe
-        const {name, userId} = req.body;
-        if (!name || !userId) return res.status(400).json({error: "Missing name or userId"});
+        const {name, userId, category} = req.body;
+        if (!name || !userId || !category) return res.status(400).json({error: "Missing recipe info, ensure required information is provided"});
         next();
     } catch (e) {
         console.log(e.stack);

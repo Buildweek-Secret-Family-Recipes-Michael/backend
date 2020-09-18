@@ -17,7 +17,7 @@ export async function up(knex: Knex): Promise<void> {
         tableBuilder.uuid("id").unique().notNullable().primary();
         tableBuilder.text("name").notNullable();
         tableBuilder.uuid("userId").notNullable().references("id").inTable("users").onDelete("CASCADE").onUpdate("CASCADE");
-        //todo: Need to add category
+        tableBuilder.text("category").notNullable();
     });
 
     await knex.schema.createTable("ingredients", tableBuilder => {
@@ -29,7 +29,7 @@ export async function up(knex: Knex): Promise<void> {
 
     await knex.schema.createTable("instructions", tableBuilder => {
         tableBuilder.uuid("id").unique().notNullable().primary();
-        tableBuilder.text("stepName").notNullable();
+        tableBuilder.text("name").notNullable();
         tableBuilder.text("stepNum").notNullable();// todo: this will need to be unique per recipe
         tableBuilder.uuid("recipeId").notNullable().references("id").inTable("recipes").onDelete("CASCADE").onUpdate("CASCADE");
     });
