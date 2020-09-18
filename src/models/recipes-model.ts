@@ -21,7 +21,7 @@ export async function findById(id: string) {
     const ingredients = await ingredientsDb.findRecipeIngredients(id);
     console.log("ingredients", ingredients);
 
-    return {...recipe};
+    return {...recipe, ingredients: ingredients};
 }
 
 export function findByUserId(userId: string) {
