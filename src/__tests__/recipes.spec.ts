@@ -27,6 +27,11 @@ describe("Creates a recipe", () => {
                     {amount: "0.5 cups", name: "yumm"},
                     {amount: "1 cup", name: "chicken"},
                     {amount: "2 cups", name: "nuggets"},
+                ],
+                instructions: [
+                    {stepNum: "1", name: "cook chicken"},
+                    {stepNum: "2", name: "cook nuggets"},
+                    {stepNum: "3", name: "eat, yumm!"}
                 ]
 
             };
@@ -39,8 +44,8 @@ describe("Creates a recipe", () => {
             expect(res.body.name).toBe(newRecipe.name);
             expect(res.body.userId).toBe(newRecipe.userId);
             expect(res.body.category).toBe(newRecipe.category);
-            //this test can fail because json does not guarantee the order of an array
-            expect(res.body.ingredients[0]?.amount).toBe(newRecipe.ingredients![0].amount);//asserting it will exist because it always will in this test
+            expect(res.body.ingredients).toContainEqual(newRecipe.ingredients![0]);//asserting it will exist because it always will in this test
+            expect(res.body.instructions).toContainEqual(newRecipe.instructions![0]);
         });
     });
 });

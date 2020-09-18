@@ -26,10 +26,15 @@ export async function createInstruction(instruction: IInstruction, recipeId: str
 }
 
 export async function findById(id: string) {
-    return dbConfig("instructions").where({id}).first();
+    return dbConfig("instructions")
+        .where({id})
+        .first();
 }
 
 export async function findRecipeInstructions(recipeId: string) {
-    return dbConfig("instructions").where({recipeId}).orderBy("stepNum");
+    return dbConfig("instructions")
+        .select("name", "stepNum")
+        .where({recipeId})
+        .orderBy("stepNum");
 
 }
