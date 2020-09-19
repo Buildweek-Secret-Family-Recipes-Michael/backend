@@ -58,15 +58,15 @@ export async function createRecipe(recipe: IRecipe) {
      */
 
     if (recipe.ingredients) {
-        if (recipe.ingredients.length > 0){
+        if (recipe.ingredients.length > 0) {
             for (let i = 0; i < recipe.ingredients.length; i++) {
                 await ingredientsModel.createIngredient(recipe.ingredients[i], recipeId);
             }
         }
 
-            // recipe.ingredients.forEach(ingredient => {
-            //     ingredientsModel.createIngredient(ingredient, recipeId);
-            // });
+        // recipe.ingredients.forEach(ingredient => {
+        //     ingredientsModel.createIngredient(ingredient, recipeId);
+        // });
     }
 
     if (recipe.instructions) {
@@ -101,31 +101,32 @@ export function findBy(filter: any) {
 }
 
 export async function getUserRecipes(userId: string) {
-    const queryString = dbConfig("users_recipes").select("recipeId").where({userId}).toSQL();
-    const redisKey:string = queryString.method + queryString.bindings + queryString.sql;//this creates a consistent, predictable and unique redis key
+    const collection = "users_recipes";
+    const redisHashKey: string = userId;
 
     //check cache db if this query exists and is not expired
-    const cachedRecipes:any = await redisClient.get(redisKey);
-    if(cachedRecipes) {
+    const cachedRecipes: any = await redisClient.hget(redisHashKey, collection);
+    if (cachedRecipes) {
+        console.log("Serving from redis", cachedRecipes);
         return JSON.parse(cachedRecipes);
     }
 
 
     //if we didn't return yet, that means the recipes are not cached
-    const users_recipes = await dbConfig("users_recipes").select("recipeId").where({userId});
-    const cachedRecipesExp = 60;//the expiration is in seconds, not millis
-    const recipeIds = users_recipes.map( (recipeIdObj: {recipeId: string}) => {
+    const users_recipes = await dbConfig(collection).select("recipeId").where({userId});
+    const cachedRecipesExp = 30;//the expiration is in seconds, not millis
+    const recipeIds = users_recipes.map((recipeIdObj: { recipeId: string }) => {
         return recipeIdObj.recipeId;
-    })
+    });
 
     // for (let i = 0; i < recipeIds.length; i++) {
     //     recipes.push(await findById(recipeIds[i]));
     // }
-    const recipes = recipeIds.map( (id: string) => {
+    const recipes = recipeIds.map((id: string) => {
         return findById(id);
-    })
+    });
 
     const resolvedRecipes = await Promise.all(recipes);
-    await redisClient.setex(redisKey, cachedRecipesExp, JSON.stringify(resolvedRecipes));
+    await redisClient.hset(redisHashKey, collection, JSON.stringify(resolvedRecipes), "EX", cachedRecipesExp.toString());
     return resolvedRecipes;
 }

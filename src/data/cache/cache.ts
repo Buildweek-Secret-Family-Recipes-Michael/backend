@@ -15,5 +15,5 @@ export const redisClient = redis.createClient({
 });
 
 //@ts-ignore
-redisClient.get = util.promisify(redisClient.get);
+redisClient.hget = util.promisify(redisClient.hget);
 console.log("Creating redis client");
