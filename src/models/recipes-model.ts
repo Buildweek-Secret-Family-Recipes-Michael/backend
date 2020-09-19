@@ -70,7 +70,7 @@ export async function createRecipe(recipe: IRecipe) {
 
     if (recipe.instructions) {
         if (recipe.instructions.length > 0) recipe.instructions.forEach((instruction) => {
-            console.log("instructions", instructionsModel.createInstruction(instruction, recipeId));
+            instructionsModel.createInstruction(instruction, recipeId);
         });
     }
 
@@ -97,4 +97,22 @@ export function findBy(filter: any) {
         .select("id", "name", "userId")
         .where({filter})
         .first();
+}
+
+export async function getUserRecipes(userId: string) {
+    console.log("get user recipes called");
+    const users_recipes = await dbConfig("users_recipes").select("recipeId").where({userId});
+    const recipeIds = users_recipes.map( (recipeIdObj: {recipeId: string}) => {
+        return recipeIdObj.recipeId;
+    })
+
+    // for (let i = 0; i < recipeIds.length; i++) {
+    //     recipes.push(await findById(recipeIds[i]));
+    // }
+    const recipes = recipeIds.map( (id: string) => {
+        return findById(id);
+    })
+
+    console.log("recipes ",recipes);
+    return Promise.all(recipes);
 }

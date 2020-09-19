@@ -27,8 +27,10 @@ recipesRouter.post("/", validateRecipeInfo, restrict, async (req, res) => {
 //read
 recipesRouter.get("/", restrict, async (req, res) => {
     //this is a restricted route and a user will need to be signed in. Check get recipes method in recipes-model
+    //this endpoint gets all the recipes for a give user
     try {
-        const recipes = await recipesModel.getRecipes();
+        const recipes = await recipesModel.getUserRecipes(req.token.userId);
+        console.log(recipes);
         res.status(200).json(recipes);
     } catch (e) {
         console.log(e.stack);
