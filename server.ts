@@ -7,8 +7,8 @@ import cors from "cors";
 
 export const server = express();
 
-server.use(express.json());
 server.use(cors());
+server.use(express.json());
 
 server.use("/api/users", usersRouter);
 server.use("/api/recipes", recipesRouter);
