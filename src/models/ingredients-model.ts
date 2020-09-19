@@ -19,11 +19,13 @@ export function findById(id: string) {
 }
 
 export async function createIngredient(ingredient: IIngredient, recipeId: string) {//recipeId is a separate param because when creating a recipe the id is unknown when the endpoint is hit
+    const ingredientPromises = [];
     const ingExists = await findBy({name: ingredient.name}, {amount: ingredient.amount}).first();//todo: Why can't I pass in just ingredient.name
     if (ingExists && (ingExists.amount === ingredient.amount)) {
         if (await findRecipeIngredient(recipeId, ingExists.id)) return findById(ingExists.id);
-        await dbConfig("recipes_ingredients").insert({recipeId: recipeId, ingredientId: ingExists.id});
-        return findById(ingExists.id);
+        ingredientPromises.push(dbConfig("recipes_ingredients").insert({recipeId: recipeId, ingredientId: ingExists.id}));
+        ingredientPromises.push(findById(ingExists.id));
+        return ingredientPromises;
     }
     const id = uuid.v4();
     const newIngredient = {//not spreading ingredient because the ingredients table does not include a recipeId column, which is being passed in for the join table
@@ -31,10 +33,12 @@ export async function createIngredient(ingredient: IIngredient, recipeId: string
         name: ingredient.name,
         id
     };
-    await dbConfig("ingredients").insert(newIngredient);//if the ingredient doesn't exist then it also needs to be added to the ingredients table
+    ingredientPromises.push(dbConfig("ingredients").insert(newIngredient));//if the ingredient doesn't exist then it also needs to be added to the ingredients table
 
-    await dbConfig("recipes_ingredients").insert({recipeId, ingredientId: newIngredient.id});
-    return findById(id);
+    ingredientPromises.push(dbConfig("recipes_ingredients").insert({recipeId, ingredientId: newIngredient.id}));
+    ingredientPromises.push(findById(id));
+
+    return ingredientPromises;
 }
 
 export function findBy(filter: Partial<IIngredient>, filter2?: Partial<IIngredient>) {

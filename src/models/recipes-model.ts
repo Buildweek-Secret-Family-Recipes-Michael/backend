@@ -20,10 +20,13 @@ export async function findById(id: string) {
         .where({id})
         .select("name", "category", "userId")
         .first();
-    const ingredients = await ingredientsModel.findRecipeIngredients(id);
-    const instructions = await instructionsModel.findRecipeInstructions(id);
+    const findPromises = [];
+    findPromises.push(ingredientsModel.findRecipeIngredients(id));
+    findPromises.push(instructionsModel.findRecipeInstructions(id));
 
-    return {...recipe, ingredients, instructions};
+    const resolvedPromises = Promise.all(findPromises);
+
+    return {...recipe, ...resolvedPromises};
 }
 
 export function findByUserId(userId: string) {
@@ -69,9 +72,14 @@ export async function createRecipe(recipe: IRecipe) {
     }
 
     if (recipe.instructions) {
-        if (recipe.instructions.length > 0) recipe.instructions.forEach((instruction) => {
-            instructionsModel.createInstruction(instruction, recipeId);
-        });
+        if (recipe.instructions.length > 0) {
+            for (let i = 0; i < recipe.instructions.length; i++) {
+                await instructionsModel.createInstruction(recipe.instructions[i], recipeId);
+            }
+            // recipe.instructions.forEach((instruction) => {
+            //     instructionsModel.createInstruction(instruction, recipeId);
+            // });
+        }
     }
 
     return findById(recipeId);//todo: get instructions
