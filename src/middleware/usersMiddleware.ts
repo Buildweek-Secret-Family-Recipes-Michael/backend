@@ -1,6 +1,5 @@
 import * as usersModel from "../models/users-model";
 import jwt from "jsonwebtoken";
-import * as recipesModel from "../models/recipes-model";
 
 declare global {
     namespace Express {
@@ -72,9 +71,9 @@ export async function validateUserUpdate(req: any, res: any, next: any) {
 
 export async function restrict(req: any, res: any, next: any) {// todo: note to self: This middleware is not meant to be used on the login route
     try {
-        const authError = {error: "Invalid credentials"};
+        const authError = {error: "Invalid credentials, please login and try again."};
 
-        const token = req.headers.authorization;// I decided to go with a header instead of cookie because we were taught to use headers in our axios with auth unit
+        const token = req.headers.authorization;
         if (!token) return res.status(401).json(authError);
 
         // decode token, resign payload, and check if signature is valid

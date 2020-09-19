@@ -42,10 +42,10 @@ usersRouter.post("/login", async (req, res) => {
         if (!passValid) return res.status(401).json({error: "Username or password invalid"});// using the same message as above as a way to not give attackers a clue if they have a valid username or password
 
         // generate a new jwt
+        if(!process.env.JWT_SECRET) throw new Error("No secret provided");
         const token = jwt.sign({
-            userID: user.id
-            // @ts-ignore
-        }, process.env.JWT_SECRET, {expiresIn: "120m"});// todo: type string | undefined unassignable...
+            userId: user.id,
+        }, process.env.JWT_SECRET, {expiresIn: "6h"});// todo: type string | undefined unassignable...
 
         res.cookie("SFRToken", token);
         res.status(200).json({token, userId: user.id, username: user.username});
