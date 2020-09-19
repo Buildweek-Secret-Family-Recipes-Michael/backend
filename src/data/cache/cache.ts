@@ -4,7 +4,6 @@ import redis from "redis";
 const port = process.env.REDIS_PORT;
 const host = process.env.REDIS_URL;
 const password = process.env.REDIS_PASSWORD;
-console.log(host, password);
 
 if (!port || !host || !password) throw new Error("Invalid redis configuration, possible envs missing");
 
@@ -13,6 +12,10 @@ export const redisClient = redis.createClient({
     host: host,
     password: password
 });
+
+export function clearHash(hashKey: string){
+    redisClient.del(hashKey);
+}
 
 //@ts-ignore
 redisClient.hget = util.promisify(redisClient.hget);

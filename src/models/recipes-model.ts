@@ -4,7 +4,7 @@ import * as ingredientsModel from "./ingredients-model";
 import * as instructionsModel from "./instructions-model";
 import {IIngredient} from "./ingredients-model";
 import {IInstruction} from "./instructions-model";
-import {redisClient} from "../data/cache/cache";
+import {redisClient, clearHash} from "../data/cache/cache";
 
 export interface IRecipe {
     name: string;
@@ -36,6 +36,7 @@ export function findByUserId(userId: string) {
 export async function createRecipe(recipe: IRecipe) {
     const recipeId = uuid.v4();
     const {name, userId, category} = recipe;
+    await clearHash(userId);
     const newRecipe = {
         name,
         userId,
@@ -107,7 +108,6 @@ export async function getUserRecipes(userId: string) {
     //check cache db if this query exists and is not expired
     const cachedRecipes: any = await redisClient.hget(redisHashKey, collection);
     if (cachedRecipes) {
-        console.log("Serving from redis", cachedRecipes);
         return JSON.parse(cachedRecipes);
     }
 
@@ -119,9 +119,6 @@ export async function getUserRecipes(userId: string) {
         return recipeIdObj.recipeId;
     });
 
-    // for (let i = 0; i < recipeIds.length; i++) {
-    //     recipes.push(await findById(recipeIds[i]));
-    // }
     const recipes = recipeIds.map((id: string) => {
         return findById(id);
     });
