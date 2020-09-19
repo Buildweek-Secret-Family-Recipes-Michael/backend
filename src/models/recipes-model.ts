@@ -4,6 +4,7 @@ import * as ingredientsModel from "./ingredients-model";
 import * as instructionsModel from "./instructions-model";
 import {IIngredient} from "./ingredients-model";
 import {IInstruction} from "./instructions-model";
+import {redisClient} from "../data/cache/cache";
 
 export interface IRecipe {
     name: string;
@@ -100,8 +101,19 @@ export function findBy(filter: any) {
 }
 
 export async function getUserRecipes(userId: string) {
-    console.log("get user recipes called");
+    const queryString = dbConfig("users_recipes").select("recipeId").where({userId}).toSQL();
+    const redisKey:string = queryString.method + queryString.bindings + queryString.sql;//this creates a consistent, predictable and unique redis key
+
+    //check cache db if this query exists and is not expired
+    const cachedRecipes:any = await redisClient.get(redisKey);
+    if(cachedRecipes) {
+        return JSON.parse(cachedRecipes);
+    }
+
+
+    //if we didn't return yet, that means the recipes are not cached
     const users_recipes = await dbConfig("users_recipes").select("recipeId").where({userId});
+    const cachedRecipesExp = 60;//the expiration is in seconds, not millis
     const recipeIds = users_recipes.map( (recipeIdObj: {recipeId: string}) => {
         return recipeIdObj.recipeId;
     })
@@ -113,6 +125,7 @@ export async function getUserRecipes(userId: string) {
         return findById(id);
     })
 
-    console.log("recipes ",recipes);
-    return Promise.all(recipes);
+    const resolvedRecipes = await Promise.all(recipes);
+    await redisClient.setex(redisKey, cachedRecipesExp, JSON.stringify(resolvedRecipes));
+    return resolvedRecipes;
 }

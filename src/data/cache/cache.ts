@@ -4,6 +4,7 @@ import redis from "redis";
 const port = process.env.REDIS_PORT;
 const host = process.env.REDIS_URL;
 const password = process.env.REDIS_PASSWORD;
+console.log(host, password);
 
 if (!port || !host || !password) throw new Error("Invalid redis configuration, possible envs missing");
 
