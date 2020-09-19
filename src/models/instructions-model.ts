@@ -13,7 +13,6 @@ export async function createInstruction(instruction: IInstruction, recipeId: str
     const id = uuid.v4();
 
     const {stepNum, name} = instruction;
-    console.log(recipeId);
     const newInstruction ={
         stepNum,
         name,
