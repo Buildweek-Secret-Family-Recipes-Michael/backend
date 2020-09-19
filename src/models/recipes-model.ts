@@ -106,6 +106,7 @@ export async function getUserRecipes(userId: string) {
         return recipeIdObj.recipeId;
     })
 
+    // let recipes = [];
     // for (let i = 0; i < recipeIds.length; i++) {
     //     recipes.push(await findById(recipeIds[i]));
     // }
