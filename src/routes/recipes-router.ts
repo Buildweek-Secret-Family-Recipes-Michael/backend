@@ -7,7 +7,7 @@ export const recipesRouter = express.Router();
 
 
 //create
-recipesRouter.post("/", validateRecipeInfo, restrict, async (req, res) => {
+recipesRouter.post("/", restrict, validateRecipeInfo, async (req, res) => {
     try {
         const {name, category, ingredients, instructions} = req.body;
         const userId = req.token.userId;
@@ -31,7 +31,7 @@ recipesRouter.get("/", restrict, async (req, res) => {
     try {
         const recipes = await recipesModel.getUserRecipes(req.token.userId);
         console.log(recipes);
-        res.status(200).json(recipes);
+        res.status(200).json({recipes});
     } catch (e) {
         console.log(e.stack);
         res.status(500).json({error: "Error getting recipes"});
