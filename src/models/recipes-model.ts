@@ -98,3 +98,17 @@ export function findBy(filter: any) {
         .where({filter})
         .first();
 }
+
+export async function getUserRecipes(userId: string) {
+    const users_recipes = await dbConfig("users_recipes").select("recipeId").where({userId});
+    const recipeIds = users_recipes.map( (recipeIdObj: {recipeId: string}) => {
+        return recipeIdObj.recipeId;
+    })
+    const recipes = [];
+
+    for (let i = 0; i < recipeIds.length; i++) {
+        recipes.push(await findById(recipeIds[i]));
+    }
+
+    return recipes;
+}
