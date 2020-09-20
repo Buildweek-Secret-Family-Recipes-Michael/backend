@@ -19,7 +19,7 @@ export interface IRecipe {
 export async function findById(id: string) {
     const recipe = await dbConfig("recipes")
         .where({id})
-        .select("name", "category", "userId")
+        .select("name", "category", "id")
         .first();
     const ingredients = await ingredientsModel.findRecipeIngredients(id);
     const instructions = await instructionsModel.findRecipeInstructions(id);
@@ -84,8 +84,9 @@ export async function updateRecipe(recipe: IRecipe) {
     if (!recipe.id) throw new Error("No recipe id provided");
 
     const id: string = recipe.id;
-    if (recipe.ingredients?.length! > 0) recipe.ingredients?.forEach(ingredient => ingredientsModel.createIngredient(ingredient, id));
-    await dbConfig("recipes").insert(recipe).where({id});
+    clearHash(recipe.userId);//updating values so the hash needs to be cleared
+    //if (recipe.ingredients?.length! > 0) recipe.ingredients?.forEach(ingredient => ingredientsModel.createIngredient(ingredient, id));
+    await dbConfig("recipes").update(recipe).where({id});
     return findById(id);
 }
 
