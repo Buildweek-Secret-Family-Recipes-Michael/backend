@@ -1,5 +1,6 @@
 import {dbConfig} from "../data/dbConfig";
 import uuid from "uuid-1345";
+import {QueryBuilder} from "knex";
 
 //I am NOT including an update function for this endpoint because the ingredients are shared, I don't want one user changing the ingredient for others.
 //A user can simply create a new ingredient
@@ -26,7 +27,7 @@ then insert all of them in one shot as an array, that would decrease the db inse
 export async function createIngredient(ingredient: IIngredient, recipeId: string) {//recipeId is a separate param because when creating a recipe the id is unknown when the endpoint is hit
     const ingExists = await findBy({name: ingredient.name}, {amount: ingredient.amount}).first();
     if (ingExists && (ingExists.amount === ingredient.amount)) {
-        if (await findRecipeIngredient(recipeId, ingExists.id)) return findById(ingExists.id);
+        if (await findRecipeIngredient(recipeId, ingExists.id)) return findById(ingExists.id);//checking if the recipeId ingredId exists already, if so, then return that incredient
         await dbConfig("recipes_ingredients").insert({recipeId: recipeId, ingredientId: ingExists.id});
         return findById(ingExists.id);
     }
@@ -42,9 +43,35 @@ export async function createIngredient(ingredient: IIngredient, recipeId: string
     return findById(id);
 }
 
-export async function createIngredients(ingredients:IIngredient[], recipeId:string) {
-    //this is a middle man
+export async function createIngredients(ingredients: IIngredient[], recipeId: string) {
+    //find all ingredients by name and amount
+    const names = ingredients.map( (ingredient) => {
+        return ingredient.name;
+    })
+    const amounts = ingredients.map( (ingredient) => {
+        return ingredient.amount;
+    })
 
+    //get all the ingredients that exist with the given names and amounts
+    const ingredientsThatExist = await findAllByNameAmount(names, amounts);
+    console.log("ingredients that exist", ingredientsThatExist);
+
+
+
+
+}
+
+export async function findAllByNameAmount(names: string[], amounts: string[]) {
+    const ingredients:IIngredient[] = dbConfig("ingredients")
+        .where((builder: QueryBuilder<any, any>) => {
+            builder.whereIn("name", names);
+        })
+        .where((builder: QueryBuilder<any, any>) => {
+            builder.whereIn("amount", amounts);
+        });
+    return ingredients.map(ingredient =>{
+        if(names.includes(ingredient.name))
+    });
 }
 
 export function findBy(filter: Partial<IIngredient>, filter2?: Partial<IIngredient>) {
@@ -64,9 +91,9 @@ export async function findRecipeIngredients(recipeId: string) {
     const ingredientIds: any[] = await dbConfig("recipes_ingredients").select("ingredientId").where({recipeId});
 
     let ingredients = [];
-    for(let i = 0; i < ingredientIds.length; i++){
+    for (let i = 0; i < ingredientIds.length; i++) {
         ingredients.push(await findById(ingredientIds[i].ingredientId)
-            .then((res:any) =>{
+            .then((res: any) => {
                 return res;
             }));
     }

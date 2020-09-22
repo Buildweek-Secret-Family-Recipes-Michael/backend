@@ -56,6 +56,7 @@ export async function createRecipe(recipe: IRecipe) {
                 //the db at one time.
                 await ingredientsModel.createIngredient(recipe.ingredients[i], recipeId);
             }
+            await ingredientsModel.createIngredients(recipe.ingredients, recipeId);
         }
     }
 
