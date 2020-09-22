@@ -101,7 +101,7 @@ describe("Updates a user", () => {
 
             expect(res.status).toBe(401);
             expect(res.body.username).toBe(undefined);
-            expect(res.body.error).toBe("Invalid credentials");
+            expect(res.body.error).toBe("Invalid credentials, please login and try again.");
         });
         it("Provides a user with no username", async () => {
             const newUserInfo = ({password: "Bruton Gaster"});

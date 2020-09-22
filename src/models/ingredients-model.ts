@@ -18,8 +18,13 @@ export function findById(id: string) {
         .first();
 }
 
+/*
+Notes to self on how to improve the performance of this function:
+Instead of looping through and hitting the db each time to insert, I could loop through each ingredient, create the ids and other extra data I may need,
+then insert all of them in one shot as an array, that would decrease the db inserts from o(n) to o(1);
+ */
 export async function createIngredient(ingredient: IIngredient, recipeId: string) {//recipeId is a separate param because when creating a recipe the id is unknown when the endpoint is hit
-    const ingExists = await findBy({name: ingredient.name}, {amount: ingredient.amount}).first();//todo: Why can't I pass in just ingredient.name
+    const ingExists = await findBy({name: ingredient.name}, {amount: ingredient.amount}).first();
     if (ingExists && (ingExists.amount === ingredient.amount)) {
         if (await findRecipeIngredient(recipeId, ingExists.id)) return findById(ingExists.id);
         await dbConfig("recipes_ingredients").insert({recipeId: recipeId, ingredientId: ingExists.id});
