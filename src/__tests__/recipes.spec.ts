@@ -1,14 +1,14 @@
 import {server} from "../../server";
 import {dbConfig} from "../data/dbConfig";
 import supertest from "supertest";
-import * as recipesModel from "../models/recipes-model";
 import {IRecipe} from "../models/recipes-model";
-import arrayContaining = jasmine.arrayContaining;
+import {redisClient} from "../data/cache/cache";
 
 
 // * clears db and reseeds it to initial data before each individual test
 beforeEach(async () => {
     await dbConfig.migrate.latest();
+    await redisClient.flushall();
     return await dbConfig.seed.run();
 });
 // * closes any database connections after the tests in case it stays open
@@ -52,10 +52,9 @@ describe("Creates a recipe", () => {
 
             expect(res.status).toBe(201);
             expect(res.body.name).toBe(newRecipe.name);
-            expect(res.body.userId).toBe(newRecipe.userId);
             expect(res.body.category).toBe(newRecipe.category);
             console.log("res ins", res.body.ingredients, "rec ins", newRecipe.ingredients);
-            expect(res.body.ingredients).toEqual(newRecipe.ingredients);
+            expect(res.body.ingredients).toContainEqual(newRecipe.ingredients![0]);
             expect(res.body.instructions).toEqual(newRecipe.instructions);
         });
     });

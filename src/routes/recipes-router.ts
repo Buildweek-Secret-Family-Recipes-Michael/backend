@@ -24,7 +24,7 @@ recipesRouter.post("/", restrict, validateRecipeInfo, async (req, res) => {
 //read
 recipesRouter.get("/", restrict, async (req, res) => {
     //this is a restricted route and a user will need to be signed in. Check get recipes method in recipes-model
-    //this endpoint gets all the recipes for a give user
+    //this endpoint gets all the recipes for a given user, that userId is taken from the passed in jwt
     try {
         const recipes = await recipesModel.getUserRecipes(req.token.userId);
         res.status(200).json({recipes});
@@ -34,10 +34,9 @@ recipesRouter.get("/", restrict, async (req, res) => {
     }
 });
 
-//todo: get by userid
 recipesRouter.get("/:id", restrict, validateRecipeId, async (req, res) => {
     try {
-        //recipe retreived by validateRecipeId middleware
+        //recipe retrieved by validateRecipeId middleware
         res.status(200).json(req.recipe);
     } catch (e) {
         console.log(e.stack);
@@ -45,23 +44,25 @@ recipesRouter.get("/:id", restrict, validateRecipeId, async (req, res) => {
     }
 });
 
-recipesRouter.get("/user/:id", restrict, validateUserId, async (req, res) => {
-    //todo: req.body.token => req.token
-    try {
-        //this route relies on the recipe post route posting recipes to the users_recipes table
-        const userId = req.token.userID;
-        if(userId !== req.params.id) res.status(403).json({message: "Authorization token does not match provided user id"});
-        const usersRecipes = await recipesModel.findByUserId(userId);
-        res.status(200).json(usersRecipes);
-    } catch (e) {
-        console.log(e.stack);
-        res.status(500).json({error: "Error getting recipes for given user"});
-    }
-
-});
-
 
 //update
+recipesRouter.put("/:id", restrict, validateRecipeId, validateRecipeInfo, async (req, res) => {
+    try {
+        const {name, category} = req.body;
+        const userId = req.token.userId;
+        /*
+        update in recipes table: name, category
+        update in recipes_ingredients: recipeId and ingredientId note: Might need to delete existing records and readd all to make sure no duplicates
+        update in recipes_instructions: same as above but for ins
+         */
+        const updatedRecipe = await recipesModel.updateRecipe({name, category, userId, id:req.params.id});
+
+        res.status(200).json(updatedRecipe);
+    } catch (e) {
+        console.log(e.stack);
+        res.status(500).json({error: "Error updating recipe"});
+    }
+});
 
 
 //delete
