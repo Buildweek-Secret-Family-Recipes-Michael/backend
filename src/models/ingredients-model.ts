@@ -42,6 +42,11 @@ export async function createIngredient(ingredient: IIngredient, recipeId: string
     return findById(id);
 }
 
+export async function createIngredients(ingredients:IIngredient[], recipeId:string) {
+    //this is a middle man
+
+}
+
 export function findBy(filter: Partial<IIngredient>, filter2?: Partial<IIngredient>) {
     const filtered = dbConfig("ingredients")
         .where(filter);

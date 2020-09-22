@@ -57,10 +57,6 @@ export async function createRecipe(recipe: IRecipe) {
                 await ingredientsModel.createIngredient(recipe.ingredients[i], recipeId);
             }
         }
-
-        // recipe.ingredients.forEach(ingredient => {
-        //     ingredientsModel.createIngredient(ingredient, recipeId);
-        // });
     }
 
     if (recipe.instructions) {
