@@ -1,7 +1,7 @@
 import express from "express";
 import * as recipesModel from "../models/recipes-model";
 import {validateRecipeId, validateRecipeInfo} from "../middleware/recipesMiddleware";
-import {restrict, validateUserId} from "../middleware/usersMiddleware";
+import {restrict} from "../middleware/usersMiddleware";
 import {IRecipe} from "../models/recipes-model";
 
 export const recipesRouter = express.Router();
@@ -79,3 +79,12 @@ recipesRouter.put("/:id", restrict, validateRecipeId, validateRecipeInfo, async 
 
 
 //delete
+
+recipesRouter.delete("/:recipeId", restrict, validateRecipeId, async (req, res) => {
+    try {
+
+    } catch (e) {
+        console.log(e.stack);
+        res.status(500).json({error: "Error deleting recipe"});
+    }
+});

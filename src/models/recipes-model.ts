@@ -118,3 +118,11 @@ export async function getUserRecipes(userId: string) {
     await redisClient.hset(redisHashKey, collection, JSON.stringify(resolvedRecipes), "EX", cachedRecipesExp.toString());
     return resolvedRecipes;
 }
+
+export async function deleteRecipe(id:string) {
+    const deletedRecipe = findById(id);//this will always find a recipe because our middleware has already validated the id
+
+    await dbConfig("recipes").delete().where({id});
+
+    return deletedRecipe;
+}
