@@ -3,6 +3,7 @@ import * as recipesModel from "../models/recipes-model";
 import {validateRecipeId, validateRecipeInfo} from "../middleware/recipesMiddleware";
 import {restrict} from "../middleware/usersMiddleware";
 import {IRecipe} from "../models/recipes-model";
+import {clearHash} from "../data/cache/cache";
 
 export const recipesRouter = express.Router();
 
@@ -80,9 +81,12 @@ recipesRouter.put("/:id", restrict, validateRecipeId, validateRecipeInfo, async 
 
 //delete
 
-recipesRouter.delete("/:recipeId", restrict, validateRecipeId, async (req, res) => {
+recipesRouter.delete("/:id", restrict, validateRecipeId, async (req, res) => {
     try {
-
+        const deletedRecipe = await recipesModel.deleteRecipe(req.params.id);
+        await clearHash(req.token.userId);//clear the redis cache so we aren't sending stale data
+        console.log(req.token.userId);
+        res.status(200).json(deletedRecipe);
     } catch (e) {
         console.log(e.stack);
         res.status(500).json({error: "Error deleting recipe"});
