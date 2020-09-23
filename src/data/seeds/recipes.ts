@@ -27,6 +27,12 @@ export async function seed(knex: Knex): Promise<void> {
             password: "$2a$13$GcChAn481QtEVU7J2c.yQuszYOJ98I0PpOvAf.SZtNXTLIRK8ontS",
             createdAt: "2020-09-06 21:10:56.035211"
         },
+        {
+            id: "c037034f-3e0b-499f-be87-8e62f63b059e",
+            username: "pokemon5",
+            password: "$2a$13$qcePjjOx1XG8jaYjV09elukGoVB6d7cRSjH88cc43r/W6mTeVqhRC",
+            createdAt: "2020-09-23 22:53:23.848283"
+        },
     ]);
 
     await knex("recipes").insert([
@@ -92,3 +98,32 @@ export async function seed(knex: Knex): Promise<void> {
         },
     ]);
 }
+
+/*
+dummy recipe
+{
+	"name": "Spaghetti",
+	"category": "dinner",
+	"source": "My Brain",
+	"ingredients": [
+		{"amount": "1 cup", "name": "noodle"},
+  	{"amount": "2 cups", "name": "sauce"},
+  	{"amount": "0.5 cups", "name": "water"},
+		{"amount": "1 tbs", "name": "salt"},
+		{"amount": "0.5 lbs", "name": "ground beef or sausage"},
+		{"amount": "1-2 clove", "name": "garlic"},
+		{"amount": "2 cups", "name": "pasta sauce"},
+		{"amount": "1 cup", "name": "reserved noodle water"}
+	],
+	"instructions":[
+		{"stepNum": "1", "name":"Bring pot of salted water to boil"},
+		{"stepNum": "2", "name":"cook noodles al dente(9-11min)"},
+		{"stepNum": "3", "name":"While noodles cook, brown meat in pan"},
+		{"stepNum": "4", "name":"mince garlic while everything else cooks"},
+		{"stepNum": "5", "name":"once noodles and meat are done, add garlic and pasta sauce to meat and cook 3-4 until sauce reduces slightly"},
+		{"stepNum": "6", "name":"drain noodles and add to the other ingredients"},
+		{"stepNum": "7", "name":"mix thoroughly until noodles are covered in sauce, adding 1/4 cup at a time of reserved noodle water as needed"},
+		{"stepNum": "8", "name":"eat, yumm!"}
+	]
+}
+ */
