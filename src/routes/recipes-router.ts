@@ -2,6 +2,7 @@ import express from "express";
 import * as recipesModel from "../models/recipes-model";
 import {validateRecipeId, validateRecipeInfo} from "../middleware/recipesMiddleware";
 import {restrict, validateUserId} from "../middleware/usersMiddleware";
+import {IRecipe} from "../models/recipes-model";
 
 export const recipesRouter = express.Router();
 
@@ -9,9 +10,9 @@ export const recipesRouter = express.Router();
 //create
 recipesRouter.post("/", restrict, validateRecipeInfo, async (req, res) => {
     try {
-        const {name, category, ingredients, instructions} = req.body;
+        const {name, category, source, ingredients, instructions} = req.body;
         const userId = req.token.userId;
-        const newRecipe = await recipesModel.createRecipe({name, userId, category, ingredients, instructions});
+        const newRecipe = await recipesModel.createRecipe({name, userId, category, source, ingredients, instructions});
 
         res.status(201).json(newRecipe);
     } catch (e) {
@@ -27,6 +28,9 @@ recipesRouter.get("/", restrict, async (req, res) => {
     //this endpoint gets all the recipes for a given user, that userId is taken from the passed in jwt
     try {
         const recipes = await recipesModel.getUserRecipes(req.token.userId);
+        recipes.map( (recipe:IRecipe) => {
+            console.log("recipe from map", recipe);
+        })
         res.status(200).json({recipes});
     } catch (e) {
         console.log(e.stack);
@@ -44,18 +48,27 @@ recipesRouter.get("/:id", restrict, validateRecipeId, async (req, res) => {
     }
 });
 
+recipesRouter.get("/?s=:filter", restrict, async (req, res) => {
+    try {
+
+    } catch (e) {
+        console.log(e.stack);
+        res.status(500).json({error: "Error finding recipes"});
+    }
+});
+
 
 //update
 recipesRouter.put("/:id", restrict, validateRecipeId, validateRecipeInfo, async (req, res) => {
     try {
-        const {name, category} = req.body;
+        const {name, category, source} = req.body;
         const userId = req.token.userId;
         /*
         update in recipes table: name, category
         update in recipes_ingredients: recipeId and ingredientId note: Might need to delete existing records and readd all to make sure no duplicates
         update in recipes_instructions: same as above but for ins
          */
-        const updatedRecipe = await recipesModel.updateRecipe({name, category, userId, id:req.params.id});
+        const updatedRecipe = await recipesModel.updateRecipe({name, category, source, userId, id:req.params.id});
 
         res.status(200).json(updatedRecipe);
     } catch (e) {

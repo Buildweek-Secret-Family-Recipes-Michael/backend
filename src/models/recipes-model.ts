@@ -11,6 +11,7 @@ export interface IRecipe {
     id?: string;
     userId: string;
     category: string;
+    source: string;
 
     instructions?: IInstruction[];
     ingredients?: IIngredient[];
@@ -19,7 +20,7 @@ export interface IRecipe {
 export async function findById(id: string) {
     const recipe = await dbConfig("recipes")
         .where({id})
-        .select("name", "category", "id")
+        .select("name", "category", "source", "id")
         .first();
     const ingredients = await ingredientsModel.findRecipeIngredients(id);
     const instructions = await instructionsModel.findRecipeInstructions(id);
@@ -35,12 +36,13 @@ export function findByUserId(userId: string) {
 
 export async function createRecipe(recipe: IRecipe) {
     const recipeId = uuid.v4();
-    const {name, userId, category} = recipe;
+    const {name, userId, category, source} = recipe;
     await clearHash(userId);
     const newRecipe = {
         name,
         userId,
         category,
+        source,
         id: recipeId
     };
 
