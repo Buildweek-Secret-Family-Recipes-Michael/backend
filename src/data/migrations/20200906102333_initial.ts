@@ -18,6 +18,7 @@ export async function up(knex: Knex): Promise<void> {
         tableBuilder.text("name").notNullable();
         tableBuilder.uuid("userId").notNullable().references("id").inTable("users").onDelete("CASCADE").onUpdate("CASCADE");
         tableBuilder.text("category").notNullable();
+        tableBuilder.text("source").notNullable();
     });
 
     await knex.schema.createTable("ingredients", tableBuilder => {
