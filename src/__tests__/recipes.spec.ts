@@ -33,6 +33,7 @@ describe("Creates a recipe", () => {
                 name: "Chicken nuggets",
                 userId: "868f632e-dffc-41b0-872b-c612525e5651",
                 category: "dinner",
+                source: "The D's",
                 ingredients: [
                     {amount: "0.5 cups", name: "yumm"},
                     {amount: "1 cup", name: "chicken"},
@@ -64,7 +65,8 @@ describe("Creates a recipe", () => {
             const newRecipe: IRecipe = {
                 name: "Chicken nuggets",
                 userId: "868f632e-dffc-41b0-872b-c612525e5651",
-                category: "dinner"
+                category: "dinner",
+                source: "The D's"
             };
 
             const res = await supertest(server)
@@ -84,7 +86,8 @@ describe("Creates a recipe", () => {
             const newRecipe: IRecipe = {
                 name: "Chicken nuggets",
                 userId: "868f632e-dffc-41b0-872b-c612525e5651",
-                category: "dinner"
+                category: "dinner",
+                source: "The D's"
             };
 
             const res = await supertest(server)

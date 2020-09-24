@@ -19,7 +19,7 @@ ingredientsRouter.post("/", validateRecipeId, validateIngredientData, async (req
 });
 
 //read
-ingredientsRouter.get("/:id", async (req, res) => {//todo: validate ingredient id middleware
+ingredientsRouter.get("/:id", async (req, res) => {
     try {
         const ingredient = await ingredientsModel.findById(req.params.id);
         console.log(ingredient);

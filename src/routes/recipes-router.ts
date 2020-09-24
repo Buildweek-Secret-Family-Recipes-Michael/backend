@@ -84,7 +84,6 @@ recipesRouter.delete("/:id", restrict, validateRecipeId, async (req, res) => {
     try {
         const deletedRecipe = await recipesModel.deleteRecipe(req.params.id);
         await clearHash(req.token.userId);//clear the redis cache so we aren't sending stale data
-        console.log(req.token.userId);
         res.status(200).json(deletedRecipe);
     } catch (e) {
         console.log(e.stack);
