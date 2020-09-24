@@ -25,7 +25,7 @@ export async function findById(id: string) {
     const ingredients = await ingredientsModel.findRecipeIngredients(id);
     const instructions = await instructionsModel.findRecipeInstructions(id);
 
-    return {...recipe, ingredients, instructions};
+    return recipe ? {...recipe, ingredients, instructions} : null;
 }
 
 export function findByUserId(userId: string) {
@@ -117,4 +117,12 @@ export async function getUserRecipes(userId: string) {
     const resolvedRecipes = await Promise.all(recipes);
     await redisClient.hset(redisHashKey, collection, JSON.stringify(resolvedRecipes), "EX", cachedRecipesExp.toString());
     return resolvedRecipes;
+}
+
+export async function deleteRecipe(id:string) {
+    const deletedRecipe = await findById(id);//this will always find a recipe because our middleware has already validated the id
+
+    await dbConfig("recipes").delete().where({id});
+
+    return deletedRecipe;
 }
