@@ -2,7 +2,7 @@ import {dbConfig} from "../data/dbConfig";
 import uuid from "uuid-1345";
 import * as ingredientsModel from "./ingredients-model";
 import * as instructionsModel from "./instructions-model";
-import {IIngredient} from "./ingredients-model";
+import {createIngredient, IIngredient} from "./ingredients-model";
 import {IInstruction} from "./instructions-model";
 import {redisClient, clearHash} from "../data/cache/cache";
 
@@ -79,13 +79,17 @@ export async function updateRecipe(recipe: IRecipe) {
     const id: string = recipe.id;
     await dbConfig("recipes").update({name, category, source}).where({id});
     if (recipe.ingredients) {
+        if(recipe.ingredients.length === 0) await dbConfig("recipes_ingredients").delete().where({recipeId: id});
         for (let i = 0; i < recipe.ingredients.length; i++) {
             const testIng = currIngredients.find((ingredient: IIngredient) => {
                 return ingredient.id === recipe.ingredients![i].id;
             });
-            console.log(ingsMatch(testIng, recipe.ingredients[i]));
+            if(!testIng || !ingsMatch(testIng, recipe.ingredients[i])){
+                //if the ingredient does not exist or doesn't match the given id, that means the ingredient has been updated
+                await dbConfig("recipes_ingredients").delete().where({recipeId:id, ingredientId:testIng.id});
+                await createIngredient(recipe.ingredients[i], id);
+            }
         }
-
     }
 
 
