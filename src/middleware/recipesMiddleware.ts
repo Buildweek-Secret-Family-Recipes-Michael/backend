@@ -12,9 +12,9 @@ declare global {
 
 export async function validateRecipeInfo(req: any, res: any, next: any) {
     try {//validation for creating a new recipe
-        const {name, category} = req.body;
+        const {name, category, source} = req.body;
         const userId = req.token.userId;
-        if (!name || !userId || !category) return res.status(400).json({error: "Missing recipe info, ensure required information is provided"});
+        if (!name || !userId || !category || !source) return res.status(400).json({error: "Missing recipe info, ensure required information is provided"});
         next();
     } catch (e) {
         console.log(e.stack);

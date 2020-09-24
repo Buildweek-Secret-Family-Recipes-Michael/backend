@@ -72,11 +72,24 @@ export async function createRecipe(recipe: IRecipe) {
 
 export async function updateRecipe(recipe: IRecipe) {
     if (!recipe.id) throw new Error("No recipe id provided");
+    const currIngredients = await ingredientsModel.findRecipeIngredients(recipe.id);
+    console.log(recipe.ingredients);
+    const {name, category, source} = recipe;
 
     const id: string = recipe.id;
+    await dbConfig("recipes").update({name, category, source}).where({id});
+    if (recipe.ingredients) {
+        for (let i = 0; i < recipe.ingredients.length; i++) {
+            const testIng = currIngredients.find((ingredient: IIngredient) => {
+                return ingredient.id === recipe.ingredients![i].id;
+            });
+            console.log(ingsMatch(testIng, recipe.ingredients[i]));
+        }
+
+    }
+
+
     clearHash(recipe.userId);//updating values so the hash needs to be cleared
-    //if (recipe.ingredients?.length! > 0) recipe.ingredients?.forEach(ingredient => ingredientsModel.createIngredient(ingredient, id));
-    await dbConfig("recipes").update(recipe).where({id});
     return findById(id);
 }
 
@@ -125,4 +138,20 @@ export async function deleteRecipe(id:string) {
     await dbConfig("recipes").delete().where({id});
 
     return deletedRecipe;
+}
+
+function ingsMatch(ing1:any, ing2:any) {
+    if(ing1 === ing2) return true;//if they are referentially equal, then they must be deep equal
+
+    else if((typeof ing1 == "object" && ing1 != null) && (typeof ing2 == "object")){
+        if(Object.keys(ing1).length != Object.keys(ing2).length) return false;//if they differ in key length, they are not deep equal
+
+        for(let prop in ing1){
+            if(ing2.hasOwnProperty(prop)){
+                if(!ingsMatch(ing1[prop], ing2[prop])) return false;//if the sub props don't equal, they don't deep equal
+            }else return false;//if obj2 doesn't have a matching prop, they aren't deep equal
+        }
+        return true;//all other cases must be true in this branch
+    }
+    return false;//finally, if one of the objects is null or not an object, then they are not deep equal
 }
