@@ -14,7 +14,7 @@ export interface IIngredient {
 export function findById(id: string) {
     return dbConfig("ingredients")
         .where({id})
-        .select("amount", "name")
+        .select("amount", "name", "id")
         .first();
 }
 
