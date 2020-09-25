@@ -1,4 +1,3 @@
-import * as ingredientsModel from "../models/ingredients-model";
 import {Request, Response, NextFunction} from "express";
 
 
@@ -11,13 +10,5 @@ export function validateIngredientData(req: Request, res: Response, next: NextFu
         console.log(e.stack);
         next();
     }
-    /*
-    export interface IIngredient {
-    amount: string;
-    name: string;
-    recipeId: string;
-    id?: string;
-}
-     */
 
 }

@@ -53,7 +53,6 @@ export async function createRecipe(recipe: IRecipe) {
     if (recipe.ingredients) {
         if (recipe.ingredients.length > 0) {
             for (let i = 0; i < recipe.ingredients.length; i++) {
-                //todo: refactor createIngredient to be create ingredients so I can pass in the array and loop there, this should improve performance
                 //because instead of hitting the db, returning the data, then coming back here to loop and do all again, I can send all ingredients to
                 //the db at one time.
                 await ingredientsModel.createIngredient(recipe.ingredients[i], recipeId);
@@ -67,13 +66,12 @@ export async function createRecipe(recipe: IRecipe) {
         });
     }
 
-    return findById(recipeId);//todo: get instructions
+    return findById(recipeId);
 }
 
 export async function updateRecipe(recipe: IRecipe) {
     if (!recipe.id) throw new Error("No recipe id provided");
     const currIngredients = await ingredientsModel.findRecipeIngredients(recipe.id);
-    console.log(recipe.ingredients);
     const {name, category, source} = recipe;
 
     const id: string = recipe.id;
@@ -98,7 +96,6 @@ export async function updateRecipe(recipe: IRecipe) {
 }
 
 export function getRecipes() {
-    // todo: this function should only be called from a route protected by an admin account
     return dbConfig("recipes");
 }
 

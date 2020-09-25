@@ -3,6 +3,7 @@ import {dbConfig} from "../data/dbConfig";
 import supertest from "supertest";
 import {IRecipe} from "../models/recipes-model";
 import {redisClient} from "../data/cache/cache";
+import {IIngredient} from "../models/ingredients-model";
 
 
 // * clears db and reseeds it to initial data before each individual test
@@ -33,6 +34,7 @@ describe("Creates a recipe", () => {
                 name: "Chicken nuggets",
                 userId: "868f632e-dffc-41b0-872b-c612525e5651",
                 category: "dinner",
+                source: "The D's",
                 ingredients: [
                     {amount: "0.5 cups", name: "yumm"},
                     {amount: "1 cup", name: "chicken"},
@@ -54,7 +56,11 @@ describe("Creates a recipe", () => {
             expect(res.body.name).toBe(newRecipe.name);
             expect(res.body.category).toBe(newRecipe.category);
             console.log("res ins", res.body.ingredients, "rec ins", newRecipe.ingredients);
-            expect(res.body.ingredients).toContainEqual(newRecipe.ingredients![0]);
+            const compareObj = {amount: newRecipe.ingredients![0].amount, name:newRecipe.ingredients![0].name};
+            const resIngredients = res.body.ingredients.map((ingredient:IIngredient) =>{//removing id since it is random every time
+                return {amount: ingredient.amount, name: ingredient.name}
+            });
+            expect(resIngredients).toContainEqual(compareObj);
             expect(res.body.instructions).toEqual(newRecipe.instructions);
         });
     });
@@ -64,7 +70,8 @@ describe("Creates a recipe", () => {
             const newRecipe: IRecipe = {
                 name: "Chicken nuggets",
                 userId: "868f632e-dffc-41b0-872b-c612525e5651",
-                category: "dinner"
+                category: "dinner",
+                source: "The D's"
             };
 
             const res = await supertest(server)
@@ -84,7 +91,8 @@ describe("Creates a recipe", () => {
             const newRecipe: IRecipe = {
                 name: "Chicken nuggets",
                 userId: "868f632e-dffc-41b0-872b-c612525e5651",
-                category: "dinner"
+                category: "dinner",
+                source: "The D's"
             };
 
             const res = await supertest(server)

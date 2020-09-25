@@ -21,8 +21,7 @@ export async function createUser(user: IUser) {
         id
     };
     await dbConfig("users").insert(newUser);
-    const newCreatedUser = await findById(id);
-    return newCreatedUser;//todo: this is coming back as undefined. But it is being added to the testing db, so my environment is set up properly, but there is a problem somewhere
+    return findById(id);
 }
 
 export async function updateUser(user: IUser) {
@@ -39,5 +38,3 @@ export function findBy(filter:Partial<IUser>) {
     return dbConfig("users")
         .where(filter);
 }
-
-//todo: write delete endpoint and method
