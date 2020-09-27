@@ -114,10 +114,10 @@ export async function getUserRecipes(userId: string) {
     const redisHashKey: string = userId;
 
     //check cache db if this query exists and is not expired
-    const cachedRecipes: any = await redisClient.hget(redisHashKey, collection);
-    if (cachedRecipes) {
-        return JSON.parse(cachedRecipes);
-    }
+    //const cachedRecipes: any = await redisClient.hget(redisHashKey, collection);
+    // if (cachedRecipes) {
+    //     return JSON.parse(cachedRecipes);
+    // }
 
 
     //if we didn't return yet, that means the recipes are not cached
@@ -132,7 +132,7 @@ export async function getUserRecipes(userId: string) {
     });
 
     const resolvedRecipes = await Promise.all(recipes);
-    await redisClient.hset(redisHashKey, collection, JSON.stringify(resolvedRecipes), "EX", cachedRecipesExp.toString());
+    //await redisClient.hset(redisHashKey, collection, JSON.stringify(resolvedRecipes), "EX", cachedRecipesExp.toString());
     return resolvedRecipes;
 }
 

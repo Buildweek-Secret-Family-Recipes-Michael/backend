@@ -61,17 +61,22 @@ export function findRecipeIngredient(recipeId: string, ingredientId: string) {
 }
 
 export async function findRecipeIngredients(recipeId: string) {
-    const ingredientIds: any[] = await dbConfig("recipes_ingredients").select("ingredientId").where({recipeId});
+    // const ingredientIds: any[] = await dbConfig("recipes_ingredients").select("ingredientId").where({recipeId});
+    //
+    // let ingredients = [];
+    // for(let i = 0; i < ingredientIds.length; i++){
+    //     ingredients.push(await findById(ingredientIds[i].ingredientId)
+    //         .then((res:any) =>{
+    //             return res;
+    //         }));
+    // }
+    // return ingredients;
 
-    let ingredients = [];
-    for(let i = 0; i < ingredientIds.length; i++){
-        ingredients.push(await findById(ingredientIds[i].ingredientId)
-            .then((res:any) =>{
-                return res;
-            }));
-    }
-    //todo: look into promise.all
-    return ingredients;
+    //duh, table joins xD
+    return dbConfig("recipes_ingredients as ri")
+        .join("ingredients as i", "i.id", "ri.ingredientId")
+        .where("ri.recipeId", recipeId)
+        .select("i.amount", "i.name", "i.id");
 }
 
 export async function deleteIngredient(id: string) {

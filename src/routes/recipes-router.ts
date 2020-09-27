@@ -29,8 +29,6 @@ recipesRouter.get("/", restrict, async (req, res) => {
     //this endpoint gets all the recipes for a given user, that userId is taken from the passed in jwt
     try {
         const recipes = await recipesModel.getUserRecipes(req.token.userId);
-        recipes.map( (recipe:IRecipe) => {
-        })
         res.status(200).json({recipes});
     } catch (e) {
         console.log(e.stack);
